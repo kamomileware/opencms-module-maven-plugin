@@ -20,9 +20,9 @@ package com.kw.opencms.module.mojo.native2ascii.factory;
 import java.io.File;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.tools.ant.BuildException;
 
 import com.kw.opencms.module.mojo.native2ascii.Native2Ascii;
-import com.sun.xml.internal.rngom.ast.builder.BuildException;
 
 /**
  * Interface for an adapter to a native2ascii implementation.

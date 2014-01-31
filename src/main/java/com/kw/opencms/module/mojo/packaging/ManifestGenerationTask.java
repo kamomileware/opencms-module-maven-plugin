@@ -33,11 +33,11 @@ import org.apache.maven.plugin.MojoFailureException;
 import com.kw.opencms.module.mojo.ModuleResource;
 import com.kw.opencms.module.mojo.util.CmsUUID;
 import com.kw.opencms.module.mojo.util.ManifestBean;
-import com.kw.opencms.module.mojo.util.ManifestUtils;
 import com.kw.opencms.module.mojo.util.ManifestBean.CategoryBean;
 import com.kw.opencms.module.mojo.util.ManifestBean.Filetype;
 import com.kw.opencms.module.mojo.util.ManifestBean.PermissionSet;
 import com.kw.opencms.module.mojo.util.ManifestBean.ResourceFileBean;
+import com.kw.opencms.module.mojo.util.ManifestUtils;
 
 public class ManifestGenerationTask extends AbstractModulePackagingTask {
 

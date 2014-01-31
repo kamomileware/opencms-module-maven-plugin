@@ -37,7 +37,6 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.Serializable;
 
-import org.apache.maven.BuildFailureException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.safehaus.uuid.EthernetAddress;
 import org.safehaus.uuid.UUID;

@@ -20,7 +20,7 @@ package com.kw.opencms.module.mojo.native2ascii.factory;
 import java.io.File;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.codehaus.plexus.logging.Logger;
+import org.apache.tools.ant.BuildException;
 
 import com.kw.opencms.module.mojo.native2ascii.Native2Ascii;
 import com.kw.opencms.module.mojo.util.Commandline;

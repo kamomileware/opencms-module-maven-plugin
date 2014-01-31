@@ -19,12 +19,12 @@ package com.kw.opencms.module.mojo.util;
  * under the License.
  */
 
+import java.util.Iterator;
+
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.StringUtils;
-
-import java.util.Iterator;
 
 /**
  *

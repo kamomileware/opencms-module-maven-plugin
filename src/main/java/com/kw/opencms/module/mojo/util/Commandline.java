@@ -28,9 +28,9 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.tools.ant.BuildException;
 import org.codehaus.plexus.util.Os;
 
-import com.sun.xml.internal.rngom.ast.builder.BuildException;
 import com.thoughtworks.xstream.io.path.Path;
 
 

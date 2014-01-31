@@ -1,6 +1,5 @@
 package com.kw.opencms.module.mojo;
 
-import java.io.File;
 import java.util.List;
 
 public class PlainEncodingConfig {
