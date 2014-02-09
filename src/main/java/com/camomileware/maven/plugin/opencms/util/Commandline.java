@@ -28,7 +28,6 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.tools.ant.BuildException;
 import org.codehaus.plexus.util.Os;
 
 import com.thoughtworks.xstream.io.path.Path;
@@ -61,7 +60,7 @@ public class Commandline implements Cloneable {
     /**
      * The arguments of the command
      */
-    private Vector arguments = new Vector();
+    private Vector<Argument> arguments = new Vector<Argument>();
 
     /**
      * the program to execute
@@ -353,8 +352,8 @@ public class Commandline implements Cloneable {
      * @return the commandline as an array of strings.
      */
     public String[] getCommandline() {
-        List commands = new LinkedList();
-        ListIterator list = commands.listIterator();
+        List<String> commands = new LinkedList<String>();
+        ListIterator<String> list = commands.listIterator();
         addCommandToList(list);
         final String[] result = new String[commands.size()];
         return (String[]) commands.toArray(result);
@@ -365,7 +364,7 @@ public class Commandline implements Cloneable {
      * @param list the list to add to.
      * @since Ant 1.6
      */
-    public void addCommandToList(ListIterator list) {
+    public void addCommandToList(ListIterator<String> list) {
         if (executable != null) {
             list.add(executable);
         }
@@ -378,7 +377,7 @@ public class Commandline implements Cloneable {
      * @return the arguments as an array of strings.
      */
     public String[] getArguments() {
-        List result = new ArrayList(arguments.size() * 2);
+        List<String> result = new ArrayList<String>(arguments.size() * 2);
         addArgumentsToList(result.listIterator());
         String [] res = new String[result.size()];
         return (String[]) result.toArray(res);
@@ -389,7 +388,7 @@ public class Commandline implements Cloneable {
      * @param list the list of arguments.
      * @since Ant 1.6
      */
-    public void addArgumentsToList(ListIterator list) {
+    public void addArgumentsToList(ListIterator<String> list) {
         for (int i = 0; i < arguments.size(); i++) {
             Argument arg = (Argument) arguments.elementAt(i);
             String[] s = arg.getParts();
@@ -491,7 +490,7 @@ public class Commandline implements Cloneable {
         final int inDoubleQuote = 2;
         int state = normal;
         StringTokenizer tok = new StringTokenizer(toProcess, "\"\' ", true);
-        Vector v = new Vector();
+        Vector<String> v = new Vector<String>();
         StringBuffer current = new StringBuffer();
         boolean lastTokenHasBeenQuoted = false;
 
@@ -554,15 +553,12 @@ public class Commandline implements Cloneable {
     /**
      * Generate a deep clone of the contained object.
      * @return a clone of the contained object
+     * @throws CloneNotSupportedException 
      */
-    public Object clone() {
-        try {
-            Commandline c = (Commandline) super.clone();
-            c.arguments = (Vector) arguments.clone();
-            return c;
-        } catch (CloneNotSupportedException e) {
-            throw new BuildException(e);
-        }
+    public Object clone() throws CloneNotSupportedException {
+        Commandline c = (Commandline) super.clone();
+        c.arguments = (Vector<Argument>) arguments.clone();
+        return c;
     }
 
     /**
@@ -704,7 +700,7 @@ public class Commandline implements Cloneable {
      * @since Ant 1.7
      * @return an Iterator.
      */
-    public Iterator iterator() {
+    public Iterator<Argument> iterator() {
         return arguments.iterator();
     }
 }

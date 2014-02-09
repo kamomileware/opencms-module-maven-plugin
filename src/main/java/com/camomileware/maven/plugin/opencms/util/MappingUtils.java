@@ -41,74 +41,66 @@ import org.codehaus.plexus.interpolation.ValueSource;
  * <li>@{artifactId}@-@{version}@.@{extension}@</li>
  * <li>@{artifactId}@.@{extension}@</li>
  * </ul>
- *
+ * 
  * @author Stephane Nicoll
  * @version $Id: MappingUtils.java 693788 2008-09-10 11:09:14Z olamy $
  */
-public class MappingUtils
-{
+public class MappingUtils {
 
-    /**
-     * Evaluates the specified expression for the given artifact.
-     *
-     * @param expression the expression to evaluate
-     * @param artifact   the artifact to use as value object for tokens
-     * @return expression the evaluated expression
-     */
-    public static String evaluateFileNameMapping( String expression, Artifact artifact )
-        throws InterpolationException
-    {
-        String value = expression;
+	/**
+	 * Evaluates the specified expression for the given artifact.
+	 * 
+	 * @param expression
+	 *            the expression to evaluate
+	 * @param artifact
+	 *            the artifact to use as value object for tokens
+	 * @return expression the evaluated expression
+	 */
+	public static String evaluateFileNameMapping(String expression, Artifact artifact) throws InterpolationException {
+		String value = expression;
 
-        // FIXME: This is BAD! Accessors SHOULD NOT change the behavior of the object.
-        artifact.isSnapshot();
+		// FIXME: This is BAD! Accessors SHOULD NOT change the behavior of the
+		// object.
+		artifact.isSnapshot();
 
-        RegexBasedInterpolator interpolator = new RegexBasedInterpolator( "\\@\\{(", ")?([^}]+)\\}@" );
-        interpolator.addValueSource( new ObjectBasedValueSource( artifact ) );
-        interpolator.addValueSource( new ObjectBasedValueSource( artifact.getArtifactHandler() ) );
+		RegexBasedInterpolator interpolator = new RegexBasedInterpolator("\\@\\{(", ")?([^}]+)\\}@");
+		interpolator.addValueSource(new ObjectBasedValueSource(artifact));
+		interpolator.addValueSource(new ObjectBasedValueSource(artifact.getArtifactHandler()));
 
-        Properties classifierMask = new Properties();
-        classifierMask.setProperty( "classifier", "" );
+		Properties classifierMask = new Properties();
+		classifierMask.setProperty("classifier", "");
 
-        interpolator.addValueSource( new PropertiesBasedValueSource ( classifierMask ) );
+		interpolator.addValueSource(new PropertiesBasedValueSource(classifierMask));
 
-        value = interpolator.interpolate( value, "__artifact" );
+		value = interpolator.interpolate(value, "__artifact");
 
-        return value;
-    }
+		return value;
+	}
 
+	/**
+	 * Internal implementation of {@link ValueSource}
+	 */
+	static class PropertiesInterpolationValueSource implements ValueSource {
 
-    /**
-     * Internal implementation of {@link ValueSource}
-     */
-    static class PropertiesInterpolationValueSource
-        implements ValueSource
-    {
+		private final Properties properties;
 
-        private final Properties properties;
+		public PropertiesInterpolationValueSource(Properties properties) {
+			this.properties = properties;
+		}
 
-        public PropertiesInterpolationValueSource( Properties properties )
-        {
-            this.properties = properties;
-        }
+		public Object getValue(String key) {
+			return properties.getProperty(key);
+		}
 
-        public Object getValue( String key )
-        {
-            return properties.getProperty( key );
-        }
+		public void clearFeedback() {
+			// nothing here
+		}
 
-        public void clearFeedback()
-        {
-            // nothing here
-            
-        }
+		public List<?> getFeedback() {
+			// nothing here just NPE free
+			return Collections.emptyList();
+		}
 
-        public List getFeedback()
-        {
-            // nothing here just NPE free
-            return Collections.EMPTY_LIST;
-        }
-
-    }
+	}
 
 }

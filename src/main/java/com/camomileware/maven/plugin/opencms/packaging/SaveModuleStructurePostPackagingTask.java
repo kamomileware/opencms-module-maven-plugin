@@ -29,44 +29,33 @@ import com.camomileware.maven.plugin.opencms.util.ModuleStructureSerializer;
 
 /**
  * Saves the webapp structure cache.
- *
+ * 
  * @author Stephane Nicoll
  * 
- * @version $Id: SaveWebappStructurePostPackagingTask.java 659222 2008-05-22 19:33:48Z olamy $
+ * @version $Id: SaveWebappStructurePostPackagingTask.java 659222 2008-05-22
+ *          19:33:48Z olamy $
  */
-public class SaveModuleStructurePostPackagingTask
-    implements ModulePostPackagingTask
-{
+public class SaveModuleStructurePostPackagingTask implements ModulePostPackagingTask {
 
-    private final File targetFile;
+	private final File targetFile;
 
-    private final ModuleStructureSerializer serialier;
+	private final ModuleStructureSerializer serialier;
 
+	public SaveModuleStructurePostPackagingTask(File targetFile) {
+		this.targetFile = targetFile;
+		this.serialier = new ModuleStructureSerializer();
+	}
 
-    public SaveModuleStructurePostPackagingTask( File targetFile )
-    {
-        this.targetFile = targetFile;
-        this.serialier = new ModuleStructureSerializer();
-    }
-
-    public void performPostPackaging( ModulePackagingContext context )
-        throws MojoExecutionException, MojoFailureException
-    {
-        if ( targetFile == null )
-        {
-            context.getLog().debug( "Cache usage is disabled, not saving webapp structure." );
-        }
-        else
-        {
-            try
-            {
-                serialier.toXml( context.getModuleStructure(), targetFile );
-                context.getLog().debug( "Cache saved successfully." );
-            }
-            catch ( IOException e )
-            {
-                throw new MojoExecutionException( "Could not save webapp structure", e );
-            }
-        }
-    }
+	public void performPostPackaging(ModulePackagingContext context) throws MojoExecutionException, MojoFailureException {
+		if (targetFile == null) {
+			context.getLog().debug("Cache usage is disabled, not saving webapp structure.");
+		} else {
+			try {
+				serialier.toXml(context.getModuleStructure(), targetFile);
+				context.getLog().debug("Cache saved successfully.");
+			} catch (IOException e) {
+				throw new MojoExecutionException("Could not save webapp structure", e);
+			}
+		}
+	}
 }

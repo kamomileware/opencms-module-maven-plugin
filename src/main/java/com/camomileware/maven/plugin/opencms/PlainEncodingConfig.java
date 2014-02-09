@@ -2,9 +2,13 @@ package com.camomileware.maven.plugin.opencms;
 
 import java.util.List;
 
+/**
+ * 
+ * @author jagarcia
+ *
+ */
 public class PlainEncodingConfig {
 
-	
 	/**
 	 * The native encoding the files are in (default is the default encoding for the JVM)
 	 */
@@ -46,7 +50,7 @@ public class PlainEncodingConfig {
 	}
 
 
-	public void setExcludes(List excludes) {
+	public void setExcludes(List<String> excludes) {
 		this.excludes = excludes;
 	}
 }

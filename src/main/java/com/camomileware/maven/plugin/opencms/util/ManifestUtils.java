@@ -13,7 +13,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
@@ -97,28 +96,22 @@ public class ManifestUtils {
 	public static char[] readFileAsArrayEncodingNoException(String filePath, String encoding){
 		File file = new File(filePath);
 		StringBuilder fileData = new StringBuilder(filePath.length());
-        BufferedReader breader;
-
+        BufferedReader breader = null;
 		try {
 			breader = new BufferedReader(new InputStreamReader(
 					new FileInputStream(file), encoding));
-		} catch (FileNotFoundException e) {
-			return null;
-		} catch (UnsupportedEncodingException e) {
-			return null;
-		}
-        char[] buf = new char[1024];
-        int numRead=0;
-        try {
+			char[] buf = new char[1024];
+			int numRead=0;
 			while((numRead=breader.read(buf)) != -1){
 			    fileData.append(buf, 0, numRead);
 			}
-
-		} catch (IOException e) {
-			return null;
+        } catch (Exception e) {
+        	return null;
 		}finally{
 			try{
-				breader.close();
+				if(breader!=null){
+					breader.close();
+				}
 			}catch(IOException e){
 			}
 		}

@@ -42,6 +42,7 @@ import com.camomileware.maven.plugin.opencms.util.PathSet;
  *
  * @version $Id: ClassesPackagingTask.java 751806 2009-03-09 19:44:08Z dennisl $
  */
+@SuppressWarnings("deprecation")
 public class ClassesPackagingTask
     extends AbstractModulePackagingTask
 {
@@ -87,7 +88,7 @@ public class ClassesPackagingTask
         }
     }
 
-    protected void generateJarArchive( ModulePackagingContext context )
+	protected void generateJarArchive( ModulePackagingContext context )
         throws MojoExecutionException
     {
         MavenProject project = context.getProject();

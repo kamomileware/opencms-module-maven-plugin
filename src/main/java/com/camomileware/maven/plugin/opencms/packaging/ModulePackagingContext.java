@@ -22,6 +22,7 @@ import com.camomileware.maven.plugin.opencms.util.ModuleStructure;
  * @author Stephane Nicoll
  * @version $Id: WarPackagingContext.java 743374 2009-02-11 16:28:01Z dennisl $
  */
+@SuppressWarnings("deprecation")
 public interface ModulePackagingContext
 {
     /**
@@ -123,7 +124,7 @@ public interface ModulePackagingContext
      *
      * @return a list of filter files
      */
-    List getFilters();
+    List<?> getFilters();
 
     /**
      * Returns the {@link ModuleStructure}.
@@ -144,7 +145,7 @@ public interface ModulePackagingContext
      * @return {@link List} of {@link FilterWrapper}
      * @since 2.1-alpha-2
      */
-    List getFilterWrappers();
+    List<FilterWrapper> getFilterWrappers();
 
     /**
      * Specify if the given <tt>fileName</tt> belongs to the list of extensions

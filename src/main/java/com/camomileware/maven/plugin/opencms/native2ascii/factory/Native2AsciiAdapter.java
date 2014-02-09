@@ -20,7 +20,6 @@ package com.camomileware.maven.plugin.opencms.native2ascii.factory;
 import java.io.File;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.tools.ant.BuildException;
 
 import com.camomileware.maven.plugin.opencms.native2ascii.Native2Ascii;
 
