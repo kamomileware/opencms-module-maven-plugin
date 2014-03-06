@@ -3,6 +3,12 @@ package com.camomileware.maven.plugin.opencms.native2ascii;
 import java.io.File;
 import java.util.List;
 
+/**
+ * Configuration Bean for Native2Asscii task
+ * 
+ * @author jagarcia
+ *
+ */
 public class PlainEncodingConfig {
 
 	public File _src;
@@ -19,11 +25,11 @@ public class PlainEncodingConfig {
 	/**
 	 * list of patterns of files that must be included. All files are included when omitted
 	 */
-	private List includes;
+	private List<String> includes;
 	/**
 	 * list of patterns of files that must be excluded. No files (except default excludes) are excluded when omitted.
 	 */
-	private List excludes;
+	private List<String> excludes;
 
 
 	public PlainEncodingConfig() {
@@ -46,21 +52,21 @@ public class PlainEncodingConfig {
 		this.encoding = encoding;
 	}
 
-	public List getIncludes() {
+	public List<String> getIncludes() {
 		return includes;
 	}
 
-	public void setIncludes(List includes) {
+	public void setIncludes(List<String> includes) {
 		this.includes = includes;
 	}
 
 
-	public List getExcludes() {
+	public List<String> getExcludes() {
 		return excludes;
 	}
 
 
-	public void setExcludes(List excludes) {
+	public void setExcludes(List<String> excludes) {
 		this.excludes = excludes;
 	}
 }

@@ -32,8 +32,6 @@ import org.codehaus.plexus.util.FileUtils;
 
 import com.camomileware.maven.plugin.opencms.ModuleResource;
 import com.camomileware.maven.plugin.opencms.PlainEncodingConfig;
-import com.camomileware.maven.plugin.opencms.native2ascii.factory.Native2AsciiAdapter;
-import com.camomileware.maven.plugin.opencms.native2ascii.factory.SunNative2Ascii;
 import com.camomileware.maven.plugin.opencms.packaging.ModulePackagingContext;
 import com.camomileware.maven.plugin.opencms.util.Commandline.Argument;
 

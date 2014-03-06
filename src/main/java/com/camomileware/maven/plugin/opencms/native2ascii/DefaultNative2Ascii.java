@@ -15,12 +15,11 @@
  *  limitations under the License.
  *
  */
-package com.camomileware.maven.plugin.opencms.native2ascii.factory;
+package com.camomileware.maven.plugin.opencms.native2ascii;
 
 import java.io.File;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import com.camomileware.maven.plugin.opencms.native2ascii.Native2Ascii;
 import com.camomileware.maven.plugin.opencms.util.Commandline;
 
 /**
