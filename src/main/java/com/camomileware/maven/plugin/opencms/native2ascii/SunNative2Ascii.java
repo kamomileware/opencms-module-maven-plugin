@@ -21,7 +21,6 @@ import java.lang.reflect.Method;
 
 import org.apache.maven.plugin.MojoExecutionException;
 
-import com.camomileware.maven.plugin.opencms.util.Commandline;
 
 /**
  * Adapter to sun.tools.native2ascii.Main.
@@ -50,17 +49,15 @@ public final class SunNative2Ascii extends DefaultNative2Ascii {
     protected boolean run(Commandline cmd, Native2Ascii log) throws MojoExecutionException
     {
         try {
-            Class n2aMain = Class.forName("sun.tools.native2ascii.Main");
-            Class[] param = new Class[] {String[].class};
+            Class<?> n2aMain = Class.forName("sun.tools.native2ascii.Main");
+            Class<?>[] param = new Class[] {String[].class};
             Method convert = n2aMain.getMethod("convert", param);
             if (convert == null) {
                 throw new MojoExecutionException("Could not find convert() method in "
                                          + "sun.tools.native2ascii.Main");
             }
             Object o = n2aMain.newInstance();
-            return ((Boolean) convert.invoke(o,
-                                             new Object[] {cmd.getArguments()})
-                    ).booleanValue();
+            return ((Boolean) convert.invoke(o,new Object[] {cmd.getArguments()})).booleanValue();
         } catch (MojoExecutionException ex) {
             //rethrow
             throw ex;
@@ -69,5 +66,4 @@ public final class SunNative2Ascii extends DefaultNative2Ascii {
            throw new MojoExecutionException("Error starting Sun's native2ascii: ", ex);
         }
     }
-
 }

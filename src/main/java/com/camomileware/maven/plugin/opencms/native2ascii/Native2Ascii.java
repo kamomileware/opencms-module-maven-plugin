@@ -15,7 +15,6 @@
  *  limitations under the License.
  *
  */
-
 package com.camomileware.maven.plugin.opencms.native2ascii;
 
 import java.io.File;
@@ -32,8 +31,8 @@ import org.codehaus.plexus.util.FileUtils;
 
 import com.camomileware.maven.plugin.opencms.ModuleResource;
 import com.camomileware.maven.plugin.opencms.PlainEncodingConfig;
+import com.camomileware.maven.plugin.opencms.native2ascii.Commandline.Argument;
 import com.camomileware.maven.plugin.opencms.packaging.ModulePackagingContext;
-import com.camomileware.maven.plugin.opencms.util.Commandline.Argument;
 
 /**
  * Converts files from native encodings to ASCII.
@@ -47,7 +46,7 @@ public class Native2Ascii {
     private String encoding = null;   // encoding to convert to/from
 
     private Native2AsciiAdapter nestedAdapter = null;
-	private List<String> args = new ArrayList<String>();
+	private List<Argument> args = new ArrayList<Argument>();
 
     public Native2Ascii()
     {
@@ -93,67 +92,6 @@ public class Native2Ascii {
     public String getEncoding() {
         return encoding;
     }
-
-    /**
-     * Choose the implementation for this particular task.
-     * @param impl the name of the implemenation
-     * @since Ant 1.6.3
-     */
-//    public void setImplementation(String impl) {
-//        if ("default".equals(impl)) {
-//            facade.setImplementation(Native2AsciiAdapterFactory.getDefault());
-//        } else {
-//            facade.setImplementation(impl);
-//        }
-//    }
-
-    /**
-     * Defines the FileNameMapper to use (nested mapper element).
-     *
-     * @return the mapper to use for file name translations.
-     *
-     * @throws BuildException if more than one mapper is defined.
-     */
-//    public Mapper createMapper() throws BuildException {
-//        if (mapper != null) {
-//            throw new BuildException("Cannot define more than one mapper",
-//                                     getLocation());
-//        }
-//        mapper = new Mapper(getProject());
-//        return mapper;
-//    }
-
-    /**
-     * A nested filenamemapper
-     * @param fileNameMapper the mapper to add
-     * @since Ant 1.6.3
-     */
-//    public void add(FileNameMapper fileNameMapper) {
-//        createMapper().add(fileNameMapper);
-//    }
-
-    /**
-     * Adds an implementation specific command-line argument.
-     * @return a ImplementationSpecificArgument to be configured
-     *
-     * @since Ant 1.6.3
-     */
-//    public ImplementationSpecificArgument createArg() {
-//        ImplementationSpecificArgument arg =
-//            new ImplementationSpecificArgument();
-//        facade.addImplementationArgument(arg);
-//        return arg;
-//    }
-
-    /**
-     * The classpath to use when loading the native2ascii
-     * implementation if it is not a built-in one.
-     *
-     * @since Ant 1.8.0
-     */
-//    public Path createImplementationClasspath() {
-//        return facade.getImplementationClasspath(getProject());
-//    }
 
     /**
      * Set the adapter explicitly.
@@ -210,7 +148,6 @@ public class Native2Ascii {
     		}
     		else
     		{
-
                 try {
 					FileUtils.copyFile( source.getCanonicalFile(), destination );
 				}
@@ -310,8 +247,8 @@ public class Native2Ascii {
      * @return an array of command line arguements.
      */
     public String[] getArgs() {
-        List tmp = new ArrayList(args.size());
-        for (Iterator e = args.iterator(); e.hasNext();) {
+        List<String> tmp = new ArrayList<String>(args.size());
+        for (Iterator<Argument> e = args.iterator(); e.hasNext();) {
             Argument arg =
                 ((Argument) e.next());
             String[] curr = arg.getParts();

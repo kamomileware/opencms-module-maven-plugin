@@ -29,15 +29,41 @@ import org.apache.maven.BuildFailureException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
+import com.camomileware.maven.plugin.opencms.ManifestBean;
 import com.camomileware.maven.plugin.opencms.ModuleResource;
+import com.camomileware.maven.plugin.opencms.ManifestBean.CategoryBean;
+import com.camomileware.maven.plugin.opencms.ManifestBean.Filetype;
+import com.camomileware.maven.plugin.opencms.ManifestBean.PermissionSet;
+import com.camomileware.maven.plugin.opencms.ManifestBean.ResourceFileBean;
 import com.camomileware.maven.plugin.opencms.util.CmsUUID;
-import com.camomileware.maven.plugin.opencms.util.ManifestBean;
 import com.camomileware.maven.plugin.opencms.util.ManifestUtils;
-import com.camomileware.maven.plugin.opencms.util.ManifestBean.CategoryBean;
-import com.camomileware.maven.plugin.opencms.util.ManifestBean.Filetype;
-import com.camomileware.maven.plugin.opencms.util.ManifestBean.PermissionSet;
-import com.camomileware.maven.plugin.opencms.util.ManifestBean.ResourceFileBean;
 
+/**
+ * Task for OpenCms module manifest generation. The manifest is crafted by a StringTemplate
+ * and is separated by two different parts:
+ * <ul><li>the descriptors section, that just apply the descriptors files to the manifest, and</li>
+ * <li>the folders and files section, each with OpenCms virtual file system properties and security </li></ul>
+ * The file and folders properties and security restrictions are extracted from the properties file 
+ * associated to the item. <p>The properties file for a file resource is located in the <code>./__properties</code>
+ * directory with the same name plus the <code>.properties</code> extension. The properties file for a folder resource is 
+ * located in <code>../__properties</code> directory with <code>__</code> prefix and the same name plus the 
+ * <code>.properties</code> extension.<br/>There are especial properties for the file resources that affect the 
+ * VFS descriptor:
+ * <ul><li><code>manifest.type.i</code> and <code>manifest.type.s</code>: indicates the type for the resource other 
+ * than the defaults as <code>plain</code> for files, and <code>folder</code> for directories.</li>
+ * <li><code>manifest.destination.i</code>: path for the resource assigned when the module is imported</li>
+ * <li><code>manifest.datecreated.i</code>: resource creation date</li>
+ * <li><code>manifest.datelastmodified.i</code>: resource last modification date</li>
+ * <li><code>manifest.usercreated.i</code>: user that created the resource</li>
+ * <li><code>manifest.userlastmodified.i</code>: user that made the last modification of the resource</li>
+ * </ul>
+ * </p>
+ * <p>The security descriptors apply the same rules as the properties files but use <code>.acl</code> extension
+ * instead.</p>
+ * 
+ * @author jagarcia
+ *
+ */
 public class ManifestGenerationTask extends AbstractModulePackagingTask {
 
 	private static final Map<String, String> descriptorFilePropertyMap;
@@ -49,6 +75,7 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 	private static final String PROPERTIES_EXT = ".properties";
 
 	private static final String ACCESSCONTROL_EXT = ".acl";
+
 	static {
 		Map<String, String> descriptorFiles = new HashMap<String, String>();
 		descriptorFiles.put("accounts.xml", "manifest.accounts.accounts_str");
@@ -61,7 +88,7 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 		descriptorFilePropertyMap = Collections.unmodifiableMap(descriptorFiles);
 	}
 
-	private Map<String, String> properties;
+	private Map<String, Object> properties;
 	private Map<String, ResourceFileBean> resourcesByRelativePath = new HashMap<String, ResourceFileBean>();
 	private Map<String, ResourceFileBean> categoryByPath = new HashMap<String, ResourceFileBean>();
 	private List<ResourceFileBean> siblingsSet = new ArrayList<ResourceFileBean>();
@@ -69,12 +96,13 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 	private ModulePackagingContext context;
 	@SuppressWarnings("unused")
 	private int propCounter = 0;
-	final private static String module_info = "module.properties"; // properties
-																	// filename
-																	// for
-																	// module
-																	// part
+	// properties filename for module part
+	final private static String module_info = "module.properties"; 
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.camomileware.maven.plugin.opencms.packaging.ModulePackagingTask#performPackaging(com.camomileware.maven.plugin.opencms.packaging.ModulePackagingContext)
+	 */
 	public void performPackaging(final ModulePackagingContext context) throws MojoExecutionException, MojoFailureException {
 
 		this.context = context;
@@ -83,8 +111,6 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 			// get module properties from descriptors
 			properties = getManifestProperties(context);
 			ManifestBean manifestBean = new ManifestBean(properties);
-
-			// List fileBeans =
 			buildModuleFileBeans(context, manifestBean);
 
 			// second pass for completing the siblings not resolved
@@ -101,7 +127,7 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Map<String, String> getManifestProperties(ModulePackagingContext context) throws MojoFailureException {
+	public Map<String, Object> getManifestProperties(ModulePackagingContext context) throws MojoFailureException {
 
 		File descriptorDir = new File(context.getWorkDirectory(), "manifest");
 		if (descriptorDir == null || !descriptorDir.exists()) {
@@ -109,7 +135,7 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 		}
 
 		// Module properties group, name, version, etc
-		Map<String, String> propertiesMap = new HashMap<String, String>();
+		Map<String, Object> propertiesMap = new HashMap<String, Object>();
 		String resourcesPath = descriptorDir.getAbsolutePath().concat(File.separator);
 		try {
 			File modulePropsFile = new File(resourcesPath.concat(module_info));
@@ -279,10 +305,8 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 
 		// Source
 		if (!resourceFile.isDirectory()) {
-			bean.setSource(moduleResourcePath.startsWith("/") ? moduleResourcePath.substring(1) // remove
-																								// initial
-																								// slash
-					: moduleResourcePath);
+			// remove initial slash
+			bean.setSource(moduleResourcePath.startsWith("/") ? moduleResourcePath.substring(1)	: moduleResourcePath);
 		}
 
 		// check for categories
@@ -298,8 +322,8 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 		}
 
 		// Properties
-		Map<String, String> vfsProperties = new HashMap<String, String>(props.size()), sharedProperties = new HashMap<String, String>(
-				props.size());
+		Map<String, String> vfsProperties = new HashMap<String, String>(props.size()), 
+				sharedProperties = new HashMap<String, String>(props.size());
 		extractVfsProperties(props, sharedProperties, vfsProperties);
 		bean.setProperties(vfsProperties.entrySet());
 		bean.setSharedProperties(sharedProperties.entrySet());
@@ -549,7 +573,6 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 	protected Properties lookForProperties(File resource) throws IOException {
 		String propFilename = resource.getParent().concat(File.separator).concat(PROPERTIES_DIR_NAME).concat(File.separator)
 				.concat(resource.isDirectory() ? PREFIX_DIR : "").concat(resource.getName()).concat(PROPERTIES_EXT);
-
 		File propFile = new File(propFilename);
 		Properties props = new Properties();
 		InputStream in = null;
@@ -564,7 +587,6 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 				in.close();
 		}
 		return props;
-
 	}
 
 	protected Properties lookForAclProperties(File resource) throws IOException {
@@ -589,14 +611,10 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 
 	protected static Map<String, String> extractProperties(Properties prop) {
 		assert (prop != null);
-
 		HashMap<String, String> map = new HashMap<String, String>();
-
 		for (Entry<Object, Object> entry : prop.entrySet()) {
-			if (entry.getValue().toString().trim().length() > 0 && !entry.getKey().toString().contains("#"))// Bug
-																											// reading
-																											// non
-																											// ISO-8859-1
+			// Bug reading non ISO-8859-1
+			if (entry.getValue().toString().trim().length() > 0 && !entry.getKey().toString().contains("#"))
 			{
 				map.put((String) entry.getKey(), (String) entry.getValue());
 			}

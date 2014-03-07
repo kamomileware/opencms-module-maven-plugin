@@ -1,4 +1,4 @@
-package com.camomileware.maven.plugin.opencms.util;
+package com.camomileware.maven.plugin.opencms;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -12,6 +12,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
+
+import com.camomileware.maven.plugin.opencms.util.SimpleBeanLoader;
 
 
 public class ManifestBean {
@@ -28,7 +30,7 @@ public class ManifestBean {
 	AccountsBean accounts;
 	List<ResourceFileBean> files = new ArrayList<ResourceFileBean>();
 
-	public ManifestBean(Map properties) {
+	public ManifestBean(Map<String, Object> properties) {
 		info = (ManifestInfoBean) SimpleBeanLoader.load(new ManifestInfoBean(),
 				properties, "manifest.info");
 		module = (ModuleInfoBean) SimpleBeanLoader.load(new ModuleInfoBean(),

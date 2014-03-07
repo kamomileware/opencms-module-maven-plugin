@@ -16,7 +16,7 @@
  *
  */
 
-package com.camomileware.maven.plugin.opencms.util;
+package com.camomileware.maven.plugin.opencms.native2ascii;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -555,7 +555,8 @@ public class Commandline implements Cloneable {
      * @return a clone of the contained object
      * @throws CloneNotSupportedException 
      */
-    public Object clone() throws CloneNotSupportedException {
+    @SuppressWarnings("unchecked")
+	public Object clone() throws CloneNotSupportedException {
         Commandline c = (Commandline) super.clone();
         c.arguments = (Vector<Argument>) arguments.clone();
         return c;
