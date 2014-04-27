@@ -23,10 +23,10 @@ import com.camomileware.maven.plugin.opencms.util.ClassesPackager;
  * This goal is binded to <code>package</code> building phase for the
  * opencms-module projects.
  * 
- * @author <a href="joseangel.garcia@vdos.com">José Ángel García</a>
+ * @author <a href="mailto:iigarsan@gmail.com">José Ángel García</a>
  * @goal module
  * @phase package
- * @requiresDependencyResolution runtime
+ * @requiresDependencyResolution runtime+compile
  */
 public class ModuleMojo extends AbstractModuleMojo {
 
