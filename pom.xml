@@ -2,14 +2,32 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+		<groupId>com.kamomileware.maven</groupId>
+		<artifactId>maven-parent</artifactId>
+		<version>1</version>
+	</parent>
+
 	<artifactId>opencms-module-maven-plugin</artifactId>
-	<groupId>com.kamomileware.maven.plugin.opencms</groupId>
-	<version>0.1.0-beta-SNAPSHOT</version>
+		<version>0.1.0-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>OpenCms Module Maven Plugin</name>
-	<url>http://www.kamomileware.com</url>
-	<inceptionYear>2009</inceptionYear>
+	<description>Builds a OpenCms module file from a "opencms-module" project, generating a full-blown manifest from the project files and descriptors</description>
+
+	<scm>
+		<connection></connection>
+		<developerConnection></developerConnection>
+		<url></url>
+	</scm>
+
+	<contributors>
+		<contributor>
+			<organization>VDOS Stochastics</organization>
+			<organizationUrl>http://www.vdos.com</organizationUrl>
+			<email>info@vdos.com</email>
+		</contributor>
+	</contributors>
 
 	<properties>
 		<mavenVersion>2.2.1</mavenVersion>
@@ -144,37 +162,9 @@
 					</requirements>
 				</configuration>
 			</plugin>
-
-			<!-- <plugin> -->
-			<!-- <inherited>true</inherited> -->
-			<!-- <groupId>org.apache.maven.plugins</groupId> -->
-			<!-- <artifactId>maven-site-plugin</artifactId> -->
-			<!-- <version>3.0-beta-3</version> -->
-			<!-- <configuration> -->
-			<!-- <inputEncoding>${encodingConfig}</inputEncoding> -->
-			<!-- <outputEncoding>${encodingConfig}</outputEncoding> -->
-			<!-- <siteDirectory>${basedir}/src/site/es</siteDirectory> -->
-			<!-- <locales>es,en</locales> -->
-			<!-- <port>9000</port> -->
-			<!-- <tempWebappDirectory>${basedir}/target/site/tempdir</tempWebappDirectory> -->
-			<!-- </configuration> -->
-			<!-- Need to exclude commons-logging due to bug. See: http://jira.codehaus.org/browse/MSITE-459 -->
-			<!-- <dependencies> -->
-			<!-- <dependency> -->
-			<!-- <groupId>org.apache.maven.doxia</groupId> -->
-			<!-- <artifactId>doxia-module-xhtml</artifactId> -->
-			<!-- <version>1.1.2</version> -->
-			<!-- <exclusions> -->
-			<!-- <exclusion> -->
-			<!-- <groupId>commons-logging</groupId> -->
-			<!-- <artifactId>commons-logging</artifactId> -->
-			<!-- </exclusion> -->
-			<!-- </exclusions> -->
-			<!-- </dependency> -->
-			<!-- </dependencies> -->
-			<!-- </plugin> -->
 		</plugins>
 	</build>
+	
 	<reporting>
 		<plugins>
 			<plugin>
@@ -195,39 +185,7 @@
 					<port>9000</port>
 					<tempWebappDirectory>${basedir}/target/site/tempdir</tempWebappDirectory>
 				</configuration>
-				<!-- Need to exclude commons-logging due to bug. See: http://jira.codehaus.org/browse/MSITE-459 -->
-<!-- 				<dependencies> -->
-<!-- 					<dependency> -->
-<!-- 						<groupId>org.apache.maven.doxia</groupId> -->
-<!-- 						<artifactId>doxia-module-xhtml</artifactId> -->
-<!-- 						<version>1.1.2</version> -->
-<!-- 						<exclusions> -->
-<!-- 							<exclusion> -->
-<!-- 								<groupId>commons-logging</groupId> -->
-<!-- 								<artifactId>commons-logging</artifactId> -->
-<!-- 							</exclusion> -->
-<!-- 						</exclusions> -->
-<!-- 					</dependency> -->
-<!-- 				</dependencies> -->
 			</plugin>
-			<!-- <plugin> -->
-			<!-- <groupId>org.apache.maven.plugins</groupId> -->
-			<!-- <artifactId>maven-resources-plugin</artifactId> -->
-			<!-- <version>2.6</version> -->
-			<!-- <inherited>true</inherited> -->
-			<!-- </plugin> -->
-			<!-- <plugin> -->
-			<!-- <groupId>org.apache.maven.plugins</groupId> -->
-			<!-- <artifactId>maven-plugin-plugin</artifactId> -->
-			<!-- <version>${mavenPluginPluginVersion}</version> -->
-			<!-- </plugin> -->
 		</plugins>
 	</reporting>
-	<distributionManagement>
-		<!-- TODO: move to public server -->
-		<repository>
-			<id>custom-plugins-repo</id>
-			<url>http://karma-server/nexus/content/repositories/plugins/</url>
-		</repository>
-	</distributionManagement>
 </project>
