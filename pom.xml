@@ -3,11 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.kamomileware.maven</groupId>
-		<artifactId>maven-parent</artifactId>
+		<groupId>com.kamomileware.maven.plugin</groupId>
+		<artifactId>maven-plugins-parent</artifactId>
 		<version>1</version>
 	</parent>
 
+	<groupId>com.kamomileware.maven.plugin.opencms</groupId>
 	<artifactId>opencms-module-maven-plugin</artifactId>
 		<version>0.1.0-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
@@ -16,9 +17,9 @@
 	<description>Builds a OpenCms module file from a "opencms-module" project, generating a full-blown manifest from the project files and descriptors</description>
 
 	<scm>
-		<connection></connection>
-		<developerConnection></developerConnection>
-		<url></url>
+		<connection>scm:svn:http://karmaware.mine.nu/svn/kw/maven-plugins/opencms-module-maven-plugin/trunk</connection>
+		<developerConnection>scm:svn:http://karmaware.mine.nu/svn/kw/maven-plugins/opencms-module-maven-plugin/trunk</developerConnection>
+		<url>http://karmaware.mine.nu/svn/kw/maven-plugins/opencms-module-maven-plugin/trunk</url>
 	</scm>
 
 	<contributors>
