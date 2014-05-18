@@ -1,21 +1,31 @@
 package com.kamomileware.maven.plugin.opencms;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-
+import com.kamomileware.maven.plugin.opencms.packaging.*;
+import com.kamomileware.maven.plugin.opencms.util.ClassesPackager;
+import com.kamomileware.maven.plugin.opencms.util.ModuleStructure;
+import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.archiver.MavenArchiver;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
+import org.apache.maven.shared.filtering.MavenFileFilter;
+import org.apache.maven.shared.filtering.MavenFilteringException;
+import org.apache.maven.shared.filtering.MavenResourcesExecution;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.jar.ManifestException;
+import org.codehaus.plexus.archiver.manager.ArchiverManager;
+import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
-import com.kamomileware.maven.plugin.opencms.util.ClassesPackager;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Build opencms module. The process includes the manifest generation if
@@ -23,7 +33,7 @@ import com.kamomileware.maven.plugin.opencms.util.ClassesPackager;
  * This goal is binded to <code>package</code> building phase for the
  * opencms-module projects.
  * 
- * @author <a href="mailto:iigarsan@gmail.com">José Ángel García</a>
+ * @author jagarcia
  * @goal module
  * @phase package
  * @requiresDependencyResolution runtime+compile
@@ -251,6 +261,298 @@ public class ModuleMojo extends AbstractModuleMojo {
 			return StringUtils.split(packagingIncludes, ",");
 		}
 	}
+
+    /**
+     *
+     * @param moduleDirectory
+     * @throws MojoExecutionException
+     * @throws MojoFailureException
+     */
+    public void buildExplodedModule(File moduleDirectory) throws MojoExecutionException, MojoFailureException {
+        moduleDirectory.mkdirs();
+
+        try {
+            buildModule(project, moduleDirectory);
+        } catch (IOException e) {
+            throw new MojoExecutionException("Could not build module", e);
+        }
+    }
+
+    /**
+     * Builds the module for the specified project with the new packaging task
+     * thingy
+     * <p/>
+     * Classes, libraries and tld files are copied to the
+     * <tt>webappDirectory</tt> during this phase.
+     *
+     * @param project
+     *            the maven project
+     * @param moduleDirectory
+     *            the target directory
+     * @throws MojoExecutionException
+     *             if an error occurred while packaging the webapp
+     * @throws MojoFailureException
+     *             if an unexpected error occurred while packaging the webapp
+     * @throws IOException
+     *             if an error occurred while copying the files
+     */
+    @SuppressWarnings("unchecked")
+    public void buildModule(MavenProject project, File moduleDirectory) throws MojoExecutionException, MojoFailureException, IOException {
+        ModuleStructure cache;
+        if (useCache && cacheFile.exists()) {
+            cache = new ModuleStructure(project.getDependencies(), moduleStructureSerialier.fromXml(cacheFile));
+        } else {
+            cache = new ModuleStructure(project.getDependencies(), null);
+        }
+
+        final long startTime = System.currentTimeMillis();
+        getLog().info("Assembling module [" + project.getArtifactId() + "] in [" + moduleDirectory + "]");
+
+        List<FileUtils.FilterWrapper> defaultFilterWrappers = null;
+        try {
+            MavenResourcesExecution mavenResourcesExecution = new MavenResourcesExecution();
+            mavenResourcesExecution.setEscapeString(escapeString);
+
+            defaultFilterWrappers = mavenFileFilter.getDefaultFilterWrappers(project, filters, escapedBackslashesInFilePath, this.session,
+                    mavenResourcesExecution);
+
+        } catch (MavenFilteringException e) {
+            getLog().error("fail to build filering wrappers " + e.getMessage());
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
+
+        final ModulePackagingContext context = new DefaultModulePackagingContext(moduleDirectory, cache, defaultFilterWrappers,
+                getNonFilteredFileExtensions(), filteringDeploymentDescriptors, this.artifactFactory);
+
+        ModulePackagingTask modulePackagingTask = new ModuleProjectPackagingTask(moduleResources, manifestXml, generateManifestXml);
+
+        modulePackagingTask.performPackaging(context);
+
+        // Post packaging
+        final List<ModulePostPackagingTask> postPackagingTasks = getPostPackagingTasks();
+        final Iterator<ModulePostPackagingTask> it2 = postPackagingTasks.iterator();
+        while (it2.hasNext()) {
+            ModulePostPackagingTask task = it2.next();
+            task.performPostPackaging(context);
+        }
+
+        getLog().info("OpenCms Module assembled in [" + (System.currentTimeMillis() - startTime) + " msecs]");
+
+    }
+
+    /**
+     * Returns a <tt>List</tt> of the
+     * {@link com.kamomileware.maven.plugin.opencms.packaging.ModulePostPackagingTask}
+     * instances to invoke to perform the post-packaging.
+     *
+     * @return the list of post packaging tasks
+     */
+    private List<ModulePostPackagingTask> getPostPackagingTasks() {
+        final List<ModulePostPackagingTask> postPackagingTasks = new ArrayList<ModulePostPackagingTask>(1);
+        if (useCache) {
+            postPackagingTasks.add(new SaveModuleStructurePostPackagingTask(cacheFile));
+        }
+        // TODO add lib scanning to detect duplicates
+        return postPackagingTasks;
+    }
+
+    /**
+     * ModulePackagingContext default implementation
+     */
+    protected class DefaultModulePackagingContext implements ModulePackagingContext {
+
+        private final ArtifactFactory artifactFactory;
+
+        private final ModuleStructure moduleStructure;
+
+        private final File moduleDirectory;
+
+        private final List<FileUtils.FilterWrapper> filterWrappers;
+
+        private List<String> nonFilteredFileExtensions;
+
+        private boolean filteringDeploymentDescriptors;
+
+        public DefaultModulePackagingContext() {
+            this.moduleDirectory = null;
+            this.moduleStructure = null;
+            this.filterWrappers = null;
+            this.artifactFactory = null;
+        }
+
+        public DefaultModulePackagingContext(File moduleDirectory, final ModuleStructure moduleStructure, List<FileUtils.FilterWrapper> filterWrappers,
+                                             List<String> nonFilteredFileExtensions, boolean filteringDeploymentDescriptors, ArtifactFactory artifactFactory) {
+            this.moduleDirectory = moduleDirectory;
+            this.moduleStructure = moduleStructure;
+            this.filterWrappers = filterWrappers;
+            this.artifactFactory = artifactFactory;
+            this.filteringDeploymentDescriptors = filteringDeploymentDescriptors;
+            if( nonFilteredFileExtensions != null){
+                this.nonFilteredFileExtensions = nonFilteredFileExtensions;
+            } else {
+                this.nonFilteredFileExtensions = Collections.emptyList();
+            }
+        }
+
+        public MavenProject getProject() {
+            return project;
+        }
+
+        public File getModuleDirectory() {
+            return moduleDirectory;
+        }
+
+        public File getClassesDirectory() {
+            return classesDirectory;
+        }
+
+        public Log getLog() {
+            return ModuleMojo.this.getLog();
+        }
+
+        public String getOutputFileNameMapping() {
+            return outputFileNameMapping;
+        }
+
+        public File getModuleSourceDirectory() {
+            return moduleSourceDirectory;
+        }
+
+        public String getModuleSourceTargetDirectory() {
+            return moduleSourceTargetDirectory;
+        }
+
+        public String[] getModuleSourceIncludes() {
+            return getIncludes();
+        }
+
+        public String[] getModuleSourceExcludes() {
+            return getExcludes();
+        }
+
+        public boolean archiveClasses() {
+            return archiveClasses;
+        }
+
+        public boolean isAttachClasses() {
+            return attachClasses;
+        }
+
+        public ArchiverManager getArchiverManager() {
+            return archiverManager;
+        }
+
+        public MavenArchiveConfiguration getArchive() {
+            return archive;
+        }
+
+        public JarArchiver getJarArchiver() {
+            return jarArchiver;
+        }
+
+        public List<?> getFilters() {
+            return filters;
+        }
+
+        public ModuleStructure getModuleStructure() {
+            return moduleStructure;
+        }
+
+        public MavenFileFilter getMavenFileFilter() {
+            return mavenFileFilter;
+        }
+
+        public List<FileUtils.FilterWrapper> getFilterWrappers() {
+            return filterWrappers;
+        }
+
+        public boolean isNonFilteredExtension(String fileName) {
+            return !mavenResourcesFiltering.filteredFileExtension(fileName, nonFilteredFileExtensions);
+        }
+
+        public boolean isFilteringDeploymentDescriptors() {
+            return filteringDeploymentDescriptors;
+        }
+
+        public ArtifactFactory getArtifactFactory() {
+            return this.artifactFactory;
+        }
+
+        public ModuleResource[] getModuleResources() {
+            return moduleResources;
+        }
+
+        public String getManifestEncoding() {
+            return manifestEncoding;
+        }
+
+        public File getDescriptorsDirectory() {
+            return descriptorsDir;
+        }
+
+        public void setDescriptorsDirectory(File directory) {
+            setDescriptorsDirectory(directory);
+        }
+
+        public String getDescriptorsEncoding() {
+            return descriptorsEncoding;
+        }
+
+        public boolean isDescriptorsN2AApply() {
+            return descriptorsN2AApply;
+        }
+
+        public PlainEncodingConfig getDescriptorsN2AConfig() {
+            return descriptorsN2AConfig;
+        }
+
+        public File getWorkDirectory() {
+            return workDirectory;
+        }
+
+        public ModuleResource getModuleSourceResource() {
+            ModuleResource defaultModuleLocation = new ModuleResource();
+            defaultModuleLocation.setDirectory(moduleSourceDirectory.getAbsolutePath());
+            defaultModuleLocation.setExcludes(new ArrayList<String>(Arrays.asList(getModuleSourceExcludes())));
+            defaultModuleLocation.setFiltering(true);
+            defaultModuleLocation.setIncludes(new ArrayList<String>(Arrays.asList(getModuleSourceIncludes())));
+            defaultModuleLocation.setModuleTargetPath(moduleSourceTargetDirectory);
+            defaultModuleLocation.setN2aApply(true);
+            defaultModuleLocation.setSystemModule(true);
+            return defaultModuleLocation;
+        }
+
+        public ModuleResource getClassesResource() {
+            ModuleResource defaultModuleLocation = new ModuleResource();
+            String targetDir = new File(moduleSourceTargetDirectory, "classes").getPath();
+
+            defaultModuleLocation.setDirectory(classesDirectory.getAbsolutePath());
+            defaultModuleLocation.setFiltering(false);
+            defaultModuleLocation.setOpencmsTargetPath("classes");
+            defaultModuleLocation.setModuleTargetPath(targetDir);
+            defaultModuleLocation.setSystemModule(true);
+            return defaultModuleLocation;
+        }
+
+        public ModuleResource getLibResource() {
+            ModuleResource defaultModuleLocation = new ModuleResource();
+
+            String targetDir = new File(moduleSourceTargetDirectory, "lib").getPath();
+            String libDirectory;
+            if (moduleSourceTargetDirectory != null) {
+                libDirectory = new File(new File(getModuleDirectory(), moduleSourceTargetDirectory), "lib").getAbsolutePath();
+            } else {
+                libDirectory = new File(getModuleDirectory(), "lib").getAbsolutePath();
+            }
+
+            defaultModuleLocation.setDirectory(libDirectory);
+            defaultModuleLocation.setFiltering(false);
+            defaultModuleLocation.setOpencmsTargetPath("lib");
+            defaultModuleLocation.setModuleTargetPath(targetDir);
+            defaultModuleLocation.setSystemModule(true);
+            return defaultModuleLocation;
+        }
+    }
 
 	public void setPackagingIncludes(String packagingIncludes) {
 		this.packagingIncludes = packagingIncludes;

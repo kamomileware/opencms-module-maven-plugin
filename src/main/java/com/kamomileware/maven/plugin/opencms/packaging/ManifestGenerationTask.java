@@ -1,26 +1,13 @@
 package com.kamomileware.maven.plugin.opencms.packaging;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.NoSuchElementException;
-import java.util.Properties;
-import java.util.Set;
-
+import com.kamomileware.maven.plugin.opencms.ManifestBean;
+import com.kamomileware.maven.plugin.opencms.ManifestBean.CategoryBean;
+import com.kamomileware.maven.plugin.opencms.ManifestBean.Filetype;
+import com.kamomileware.maven.plugin.opencms.ManifestBean.PermissionSet;
+import com.kamomileware.maven.plugin.opencms.ManifestBean.ResourceFileBean;
+import com.kamomileware.maven.plugin.opencms.ModuleResource;
+import com.kamomileware.maven.plugin.opencms.util.CmsUUID;
+import com.kamomileware.maven.plugin.opencms.util.ManifestUtils;
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.StringTemplateErrorListener;
 import org.antlr.stringtemplate.StringTemplateGroup;
@@ -29,14 +16,9 @@ import org.apache.maven.BuildFailureException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-import com.kamomileware.maven.plugin.opencms.ManifestBean;
-import com.kamomileware.maven.plugin.opencms.ModuleResource;
-import com.kamomileware.maven.plugin.opencms.ManifestBean.CategoryBean;
-import com.kamomileware.maven.plugin.opencms.ManifestBean.Filetype;
-import com.kamomileware.maven.plugin.opencms.ManifestBean.PermissionSet;
-import com.kamomileware.maven.plugin.opencms.ManifestBean.ResourceFileBean;
-import com.kamomileware.maven.plugin.opencms.util.CmsUUID;
-import com.kamomileware.maven.plugin.opencms.util.ManifestUtils;
+import java.io.*;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Task for OpenCms module manifest generation. The manifest is crafted by a StringTemplate
@@ -166,8 +148,8 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 	 * Builds the beans for every file selected and the directories under they
 	 * sit.
 	 * 
-	 * @param fileLocations
-	 *            collection of locations to add to the module.
+	 * @param context
+	 *            information with locations to add to the module.
 	 * @param manifestBean
 	 *            for building paths inside opencms system.
 	 * @return list of resource file beans
@@ -190,7 +172,7 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 		fileLocations.addAll(Arrays.asList(module_resources));
 
 		// Estimates 50 files per location
-		List<ManifestBean.ResourceFileBean> resourceBeanList = new ArrayList<ManifestBean.ResourceFileBean>(fileLocations.size() * 50);
+		List<ManifestBean.ResourceFileBean> resourceBeanList = new ArrayList<ManifestBean.ResourceFileBean>();
 
 		// Main location loop
 		for (ModuleResource location : fileLocations) {
@@ -233,7 +215,7 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 	 * @return
 	 */
 	private String calculateModuleDestinationPath(ManifestBean manifestBean, ModuleResource location) {
-		String moduleTargetPath = location.getModuleTargetPath();
+		String moduleTargetPath = location.getOpencmsTargetPath();
 		String destinationPath = location.isSystemModule() ? "system/modules/" + manifestBean.getModule().name + "/" : "";
 
 		if (moduleTargetPath != null) {
@@ -242,7 +224,7 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 				destinationPath += "/";
 			}
 		}
-		location.setModuleTargetPath(destinationPath);
+		location.setOpencmsTargetPath(destinationPath);
 		return destinationPath;
 	}
 
@@ -274,7 +256,7 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 		}
 
 		// Destination
-		String destination = calculateResourceDestinationPath(props, resourcePath, moduleResource.getModuleTargetPath(),
+		String destination = calculateResourceDestinationPath(props, resourcePath, moduleResource.getOpencmsTargetPath(),
 				resourceFile.isDirectory());
 		bean.setDestination(destination);
 
@@ -385,14 +367,14 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 	private String getModuleResourcePath(ModuleResource moduleResource, String resourcePath) {
 		if (!File.separator.equals("/")) {
 			resourcePath.replace(File.separator, "/");
-			if (moduleResource.getTargetPath() != null) {
-				moduleResource.setTargetPath(moduleResource.getTargetPath().replace(File.separator, "/"));
+			if (moduleResource.getModuleTargetPath() != null) {
+				moduleResource.setModuleTargetPath(moduleResource.getModuleTargetPath().replace(File.separator, "/"));
 			}
 		}
 
-		String moduleResourcePath = moduleResource.getTargetPath() != null && !moduleResource.getTargetPath().isEmpty()
-				&& !moduleResource.getTargetPath().equals(".") && !moduleResource.getTargetPath().equals("./") ? moduleResource
-				.getTargetPath() + "/" + resourcePath : resourcePath;
+		String moduleResourcePath = moduleResource.getModuleTargetPath() != null && !moduleResource.getModuleTargetPath().isEmpty()
+				&& !moduleResource.getModuleTargetPath().equals(".") && !moduleResource.getModuleTargetPath().equals("./") ? moduleResource
+				.getModuleTargetPath() + "/" + resourcePath : resourcePath;
 		return moduleResourcePath;
 	}
 

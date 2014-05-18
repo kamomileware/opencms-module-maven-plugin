@@ -1,8 +1,8 @@
 package com.kamomileware.maven.plugin.opencms;
 
-import java.io.File;
-
 import org.apache.maven.model.Resource;
+
+import java.io.File;
 
 public class ModuleResource extends Resource
 {
@@ -35,20 +35,27 @@ public class ModuleResource extends Resource
 
 
 	/// Getters and Setters
-
-	public String getModuleTargetPath() {
+	public String getOpencmsTargetPath() {
 		return moduleTargetPath;
 	}
 
-	public void setModuleTargetPath(String moduleTargetPath) {
+	public void setOpencmsTargetPath(String moduleTargetPath) {
 		this.moduleTargetPath = moduleTargetPath;
 	}
+
+    public String getModuleTargetPath(){
+        return super.getTargetPath();
+    }
+
+    public void setModuleTargetPath(String path){
+        super.setTargetPath(path);
+    }
 
 	public boolean isSystemModule() {
 		return systemModule;
 	}
 
-	public void setSystemModule(boolean systemModule) {
+   	public void setSystemModule(boolean systemModule) {
 		this.systemModule = systemModule;
 	}
 
@@ -84,5 +91,4 @@ public class ModuleResource extends Resource
 	public void setModuleWorkingPath(File file) {
 		this.moduleWorkingPath = file;
 	}
-
 }

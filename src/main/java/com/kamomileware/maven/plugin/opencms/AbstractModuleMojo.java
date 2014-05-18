@@ -1,40 +1,30 @@
 package com.kamomileware.maven.plugin.opencms;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
+import com.kamomileware.maven.plugin.opencms.util.ModuleStructureSerializer;
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.filtering.MavenFileFilter;
-import org.apache.maven.shared.filtering.MavenFilteringException;
-import org.apache.maven.shared.filtering.MavenResourcesExecution;
 import org.apache.maven.shared.filtering.MavenResourcesFiltering;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.manager.ArchiverManager;
-import org.codehaus.plexus.util.FileUtils.FilterWrapper;
 import org.codehaus.plexus.util.StringUtils;
 
-import com.kamomileware.maven.plugin.opencms.packaging.ModulePackagingContext;
-import com.kamomileware.maven.plugin.opencms.packaging.ModulePackagingTask;
-import com.kamomileware.maven.plugin.opencms.packaging.ModulePostPackagingTask;
-import com.kamomileware.maven.plugin.opencms.packaging.ModuleProjectPackagingTask;
-import com.kamomileware.maven.plugin.opencms.packaging.SaveModuleStructurePostPackagingTask;
-import com.kamomileware.maven.plugin.opencms.util.ModuleStructure;
-import com.kamomileware.maven.plugin.opencms.util.ModuleStructureSerializer;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+/**
+ * Base class for opencms-module maven plugin mojos.
+ * Contains references to maven components and configurations.
+ *
+ * @author jagarcia
+ */
 @SuppressWarnings("deprecation")
 public abstract class AbstractModuleMojo extends AbstractMojo {
 
@@ -42,7 +32,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 
 	public static final String DEFAULT_FILE_NAME_MAPPING_CLASSIFIER = "@{artifactId}@-@{version}@-@{classifier}@.@{extension}@";
 
-	private static final String[] EMPTY_STRING_ARRAY = {};
+	protected static final String[] EMPTY_STRING_ARRAY = {};
 
 	protected static final String MANIFEST_NAME = "manifest.xml";
 
@@ -55,7 +45,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * @required
 	 * @readonly
 	 */
-	private MavenProject project;
+    protected MavenProject project;
 
 	/**
 	 * The directory containing generated classes.
@@ -64,7 +54,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * @required
 	 * @readonly
 	 */
-	private File classesDirectory;
+    protected File classesDirectory;
 
 	/**
 	 * Whether classes (module/classes or lib directory) should be attached to
@@ -72,7 +62,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * 
 	 * @parameter default-value="true"
 	 */
-	private boolean attachClasses = true;
+    protected boolean attachClasses = true;
 
 	/**
 	 * Whether a JAR file will be created for the classes in the module. Using
@@ -82,7 +72,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * 
 	 * @parameter property="archiveClasses" default-value="false"
 	 */
-	private boolean archiveClasses;
+    protected boolean archiveClasses;
 
 	/**
 	 * The Jar archiver needed for archiving classes directory into jar file
@@ -91,7 +81,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * @component role="org.codehaus.plexus.archiver.Archiver" role-hint="jar"
 	 * @required
 	 */
-	private JarArchiver jarArchiver;
+    protected JarArchiver jarArchiver;
 
 	/**
 	 * The directory where the module is built.
@@ -99,7 +89,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * @parameter default-value="${project.build.directory}/${project.build.finalName}"
 	 * @required
 	 */
-	private File moduleDirectory;
+	protected File moduleDirectory;
 
 	/**
 	 * Single directory for extra files to include in the module.
@@ -107,21 +97,21 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * @parameter default-value="${basedir}/src/main/module"
 	 * @required
 	 */
-	private File moduleSourceDirectory;
+    protected File moduleSourceDirectory;
 
 	/**
 	 * Relative path where source directory will be placed in the module.
 	 * 
 	 * @parameter
 	 */
-	private String moduleSourceTargetDirectory;
+    protected String moduleSourceTargetDirectory;
 
 	/**
 	 * The list of webResources we want to transfer.
 	 * 
 	 * @parameter
 	 */
-	private ModuleResource[] moduleResources;
+    protected ModuleResource[] moduleResources;
 
 	/**
 	 * Filters (property files) to include during the interpolation of the
@@ -129,52 +119,52 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * 
 	 * @parameter
 	 */
-	private List<?> filters;
+    protected List<?> filters;
 
 	/**
 	 * The path to the web.xml file to use.
 	 * 
 	 * @parameter property="maven.module.manifestxml"
 	 */
-	private File manifestXml;
+    protected File manifestXml;
 
 	/**
 	 * Whether to generate the manifest if it doent exist
 	 * 
-	 * @parameter property="generate.manifest.xml" default-value="false"
+	 * @parameter property="generate.manifest.xml" default-value="true"
 	 */
-	private boolean generateManifestXml = false;
+    protected boolean generateManifestXml = true;
 
 	/**
 	 * Charset to encode the generated module manifest;
 	 * 
 	 * @parameter property="manifest.encoding"
 	 */
-	private String manifestEncoding;
+	protected String manifestEncoding;
 
 	/**
 	 * 
 	 * @parameter property="module.descriptors.dir" default-value="${basedir}/src/main/manifest"
 	 */
-	private File descriptorsDir;
+	protected File descriptorsDir;
 
 	/**
 	 * 
 	 * @parameter property="module.descriptors.encoding" default-value="default"
 	 */
-	private String descriptorsEncoding;
+	protected String descriptorsEncoding;
 
 	/**
 	 * 
 	 * @parameter property="module.descriptors.n2aapply"
 	 *            default-value="false"
 	 */
-	private boolean descriptorsN2AApply;
+	protected boolean descriptorsN2AApply;
 
 	/**
 	 * @parameter
 	 */
-	private PlainEncodingConfig descriptorsN2AConfig;
+	protected PlainEncodingConfig descriptorsN2AConfig;
 
 	/**
 	 * Directory to copy conversed to native resources into if needed
@@ -182,7 +172,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * @parameter default-value="${project.build.directory}/module/work"
 	 * @required
 	 */
-	private File workDirectory;
+	protected File workDirectory;
 
 	/**
 	 * The file name mapping to use to copy libraries and tlds. If no file
@@ -190,7 +180,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * 
 	 * @parameter
 	 */
-	private String outputFileNameMapping;
+	protected String outputFileNameMapping;
 
 	/**
 	 * The file containing the module structure cache.
@@ -198,7 +188,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * @parameter default-value="${project.build.directory}/module/work/webapp-cache.xml"
 	 * @required
 	 */
-	private File cacheFile;
+	protected File cacheFile;
 
 	/**
 	 * Whether the cache should be used to save the status of the module accross
@@ -206,14 +196,14 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * 
 	 * @parameter property="useCache" default-value="true"
 	 */
-	private boolean useCache = true;
+	protected boolean useCache = true;
 
 	/**
 	 * @component role="org.apache.maven.artifact.factory.ArtifactFactory"
 	 * @required
 	 * @readonly
 	 */
-	private ArtifactFactory artifactFactory;
+	protected ArtifactFactory artifactFactory;
 
 	/**
 	 * To look up Archiver/UnArchiver implementations
@@ -221,7 +211,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * @component role="org.codehaus.plexus.archiver.manager.ArchiverManager"
 	 * @required
 	 */
-	private ArchiverManager archiverManager;
+	protected ArchiverManager archiverManager;
 
 	/**
 	 * 
@@ -229,7 +219,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 *            role-hint="default"
 	 * @required
 	 */
-	private MavenFileFilter mavenFileFilter;
+	protected MavenFileFilter mavenFileFilter;
 
 	/**
 	 * 
@@ -238,7 +228,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 *            role-hint="default"
 	 * @required
 	 */
-	private MavenResourcesFiltering mavenResourcesFiltering;
+	protected MavenResourcesFiltering mavenResourcesFiltering;
 
 	/**
 	 * The comma separated list of tokens to include when copying content of the
@@ -246,7 +236,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * 
 	 * @parameter alias="includes"
 	 */
-	private String moduleSourceIncludes = "**";
+	protected String moduleSourceIncludes = "**";
 
 	/**
 	 * The comma separated list of tokens to exclude when copying content of the
@@ -255,7 +245,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * 
 	 * @parameter alias="excludes"
 	 */
-	private String moduleSourceExcludes;
+	protected String moduleSourceExcludes;
 
 	/**
 	 * The comma separated list of tokens to exclude when copying content of the
@@ -264,7 +254,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * 
 	 * @parameter alias="encoding"
 	 */
-	private String moduleSourceEncoding;
+	protected String moduleSourceEncoding;
 
 	/**
 	 * A list of file extensions to not filtering. <b>will be used for
@@ -272,14 +262,14 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * 
 	 * @parameter
 	 */
-	private List<String> nonFilteredFileExtensions;
+	protected List<String> nonFilteredFileExtensions;
 
 	/**
 	 * @parameter property="session"
 	 * @readonly
 	 * @required
 	 */
-	private MavenSession session;
+	protected MavenSession session;
 
 	/**
 	 * To filtering deployment descriptors <b>disabled by default</b>
@@ -287,7 +277,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * @parameter property="maven.module.filteringManifestDescriptors"
 	 *            default-value="false"
 	 */
-	private boolean filteringDeploymentDescriptors = false;
+	protected boolean filteringDeploymentDescriptors = false;
 
 	/**
 	 * To escape interpolated value with windows path c:\foo\bar will be
@@ -296,7 +286,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * @parameter property="maven.module.escapedBackslashesInFilePath"
 	 *            default-value="false"
 	 */
-	private boolean escapedBackslashesInFilePath = false;
+	protected boolean escapedBackslashesInFilePath = false;
 
 	/**
 	 * Expression preceded with the String won't be interpolated \${foo} will be
@@ -313,20 +303,20 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 	 * 
 	 * @parameter
 	 */
-	private MavenArchiveConfiguration archive = new MavenArchiveConfiguration();
+	protected MavenArchiveConfiguration archive = new MavenArchiveConfiguration();
 
 	/**
 	 * @parameter property="settings"
 	 * @readonly
 	 */
-	private Settings settings;
+	protected Settings settings;
 
 	/**
 	 * @parameter property="dryrun" default-value="false"
 	 */
-	private boolean dryRun = false;
+	protected boolean dryRun = false;
 
-	private final ModuleStructureSerializer moduleStructureSerialier = new ModuleStructureSerializer();
+	protected final ModuleStructureSerializer moduleStructureSerialier = new ModuleStructureSerializer();
 
 	/**
 	 * Name of the webapp aplication name for OpenCms.
@@ -381,297 +371,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
 		return serverSettings;
 	}
 
-	/**
-	 * 
-	 * @param moduleDirectory
-	 * @throws MojoExecutionException
-	 * @throws MojoFailureException
-	 */
-	public void buildExplodedModule(File moduleDirectory) throws MojoExecutionException, MojoFailureException {
-		moduleDirectory.mkdirs();
 
-		try {
-			buildModule(project, moduleDirectory);
-		} catch (IOException e) {
-			throw new MojoExecutionException("Could not build module", e);
-		}
-	}
-
-	/**
-	 * Builds the module for the specified project with the new packaging task
-	 * thingy
-	 * <p/>
-	 * Classes, libraries and tld files are copied to the
-	 * <tt>webappDirectory</tt> during this phase.
-	 * 
-	 * @param project
-	 *            the maven project
-	 * @param moduleDirectory
-	 *            the target directory
-	 * @throws MojoExecutionException
-	 *             if an error occurred while packaging the webapp
-	 * @throws MojoFailureException
-	 *             if an unexpected error occurred while packaging the webapp
-	 * @throws IOException
-	 *             if an error occurred while copying the files
-	 */
-	@SuppressWarnings("unchecked")
-	public void buildModule(MavenProject project, File moduleDirectory) throws MojoExecutionException, MojoFailureException, IOException {
-		ModuleStructure cache;
-		if (useCache && cacheFile.exists()) {
-			cache = new ModuleStructure(project.getDependencies(), moduleStructureSerialier.fromXml(cacheFile));
-		} else {
-			cache = new ModuleStructure(project.getDependencies(), null);
-		}
-
-		final long startTime = System.currentTimeMillis();
-		getLog().info("Assembling module [" + project.getArtifactId() + "] in [" + moduleDirectory + "]");
-
-		List<FilterWrapper> defaultFilterWrappers = null;
-		try {
-			MavenResourcesExecution mavenResourcesExecution = new MavenResourcesExecution();
-			mavenResourcesExecution.setEscapeString(escapeString);
-
-			defaultFilterWrappers = mavenFileFilter.getDefaultFilterWrappers(project, filters, escapedBackslashesInFilePath, this.session,
-					mavenResourcesExecution);
-
-		} catch (MavenFilteringException e) {
-			getLog().error("fail to build filering wrappers " + e.getMessage());
-			throw new MojoExecutionException(e.getMessage(), e);
-		}
-
-		final ModulePackagingContext context = new DefaultModulePackagingContext(moduleDirectory, cache, defaultFilterWrappers,
-				getNonFilteredFileExtensions(), filteringDeploymentDescriptors, this.artifactFactory);
-
-		ModulePackagingTask modulePackagingTask = new ModuleProjectPackagingTask(moduleResources, manifestXml, generateManifestXml);
-
-		modulePackagingTask.performPackaging(context);
-
-		// Post packaging
-		final List<ModulePostPackagingTask> postPackagingTasks = getPostPackagingTasks();
-		final Iterator<ModulePostPackagingTask> it2 = postPackagingTasks.iterator();
-		while (it2.hasNext()) {
-			ModulePostPackagingTask task = it2.next();
-			task.performPostPackaging(context);
-		}
-
-		getLog().info("OpenCms Module assembled in [" + (System.currentTimeMillis() - startTime) + " msecs]");
-
-	}
-
-	/**
-	 * Returns a <tt>List</tt> of the
-	 * {@link org.apache.maven.plugin.ModulePostPackagingTask.packaging.WarPostPackagingTask}
-	 * instances to invoke to perform the post-packaging.
-	 * 
-	 * @return the list of post packaging tasks
-	 */
-	private List<ModulePostPackagingTask> getPostPackagingTasks() {
-		final List<ModulePostPackagingTask> postPackagingTasks = new ArrayList<ModulePostPackagingTask>(1);
-		if (useCache) {
-			postPackagingTasks.add(new SaveModuleStructurePostPackagingTask(cacheFile));
-		}
-		// TODO add lib scanning to detect duplicates
-		return postPackagingTasks;
-	}
-
-	/**
-	 * ModulePackagingContext default implementation
-	 */
-	protected class DefaultModulePackagingContext implements ModulePackagingContext {
-
-		private final ArtifactFactory artifactFactory;
-
-		private final ModuleStructure moduleStructure;
-
-		private final File moduleDirectory;
-
-		private final List<FilterWrapper> filterWrappers;
-
-		private List<String> nonFilteredFileExtensions;
-
-		private boolean filteringDeploymentDescriptors;
-
-		public DefaultModulePackagingContext() {
-			this.moduleDirectory = null;
-			this.moduleStructure = null;
-			this.filterWrappers = null;
-			this.artifactFactory = null;
-		}
-
-		public DefaultModulePackagingContext(File moduleDirectory, final ModuleStructure moduleStructure, List<FilterWrapper> filterWrappers,
-				List<String> nonFilteredFileExtensions, boolean filteringDeploymentDescriptors, ArtifactFactory artifactFactory) {
-			this.moduleDirectory = moduleDirectory;
-			this.moduleStructure = moduleStructure;
-			this.filterWrappers = filterWrappers;
-			this.artifactFactory = artifactFactory;
-			this.filteringDeploymentDescriptors = filteringDeploymentDescriptors;
-			if( nonFilteredFileExtensions != null){
-				this.nonFilteredFileExtensions = nonFilteredFileExtensions;
-			} else { 
-				this.nonFilteredFileExtensions = Collections.emptyList();
-			}
-		}
-
-		public MavenProject getProject() {
-			return project;
-		}
-
-		public File getModuleDirectory() {
-			return moduleDirectory;
-		}
-
-		public File getClassesDirectory() {
-			return classesDirectory;
-		}
-
-		public Log getLog() {
-			return AbstractModuleMojo.this.getLog();
-		}
-
-		public String getOutputFileNameMapping() {
-			return outputFileNameMapping;
-		}
-
-		public File getModuleSourceDirectory() {
-			return moduleSourceDirectory;
-		}
-
-		public String getModuleSourceTargetDirectory() {
-			return moduleSourceTargetDirectory;
-		}
-
-		public String[] getModuleSourceIncludes() {
-			return getIncludes();
-		}
-
-		public String[] getModuleSourceExcludes() {
-			return getExcludes();
-		}
-
-		public boolean archiveClasses() {
-			return archiveClasses;
-		}
-
-		public boolean isAttachClasses() {
-			return attachClasses;
-		}
-
-		public ArchiverManager getArchiverManager() {
-			return archiverManager;
-		}
-
-		public MavenArchiveConfiguration getArchive() {
-			return archive;
-		}
-
-		public JarArchiver getJarArchiver() {
-			return jarArchiver;
-		}
-
-		public List<?> getFilters() {
-			return filters;
-		}
-
-		public ModuleStructure getModuleStructure() {
-			return moduleStructure;
-		}
-
-		public MavenFileFilter getMavenFileFilter() {
-			return mavenFileFilter;
-		}
-
-		public List<FilterWrapper> getFilterWrappers() {
-			return filterWrappers;
-		}
-
-		public boolean isNonFilteredExtension(String fileName) {
-			return !mavenResourcesFiltering.filteredFileExtension(fileName, nonFilteredFileExtensions);
-		}
-
-		public boolean isFilteringDeploymentDescriptors() {
-			return filteringDeploymentDescriptors;
-		}
-
-		public ArtifactFactory getArtifactFactory() {
-			return this.artifactFactory;
-		}
-
-		public ModuleResource[] getModuleResources() {
-			return moduleResources;
-		}
-
-		public String getManifestEncoding() {
-			return manifestEncoding;
-		}
-
-		public File getDescriptorsDirectory() {
-			return descriptorsDir;
-		}
-
-		public void setDescriptorsDirectory(File directory) {
-			setDescriptorsDirectory(directory);
-		}
-
-		public String getDescriptorsEncoding() {
-			return descriptorsEncoding;
-		}
-
-		public boolean isDescriptorsN2AApply() {
-			return descriptorsN2AApply;
-		}
-
-		public PlainEncodingConfig getDescriptorsN2AConfig() {
-			return descriptorsN2AConfig;
-		}
-
-		public File getWorkDirectory() {
-			return workDirectory;
-		}
-
-		public ModuleResource getModuleSourceResource() {
-			ModuleResource defaultModuleLocation = new ModuleResource();
-			defaultModuleLocation.setDirectory(moduleSourceDirectory.getAbsolutePath());
-			defaultModuleLocation.setExcludes(new ArrayList<String>(Arrays.asList(getModuleSourceExcludes())));
-			defaultModuleLocation.setFiltering(false);
-			defaultModuleLocation.setIncludes(new ArrayList<String>(Arrays.asList(getModuleSourceIncludes())));
-			defaultModuleLocation.setTargetPath(moduleSourceTargetDirectory);
-			defaultModuleLocation.setN2aApply(true);
-			defaultModuleLocation.setSystemModule(true);
-			return defaultModuleLocation;
-		}
-
-		public ModuleResource getClassesResource() {
-			ModuleResource defaultModuleLocation = new ModuleResource();
-			String targetDir = new File(moduleSourceTargetDirectory, "classes").getPath();
-
-			defaultModuleLocation.setDirectory(classesDirectory.getAbsolutePath());
-			defaultModuleLocation.setFiltering(false);
-			defaultModuleLocation.setModuleTargetPath("classes");
-			defaultModuleLocation.setTargetPath(targetDir);
-			defaultModuleLocation.setSystemModule(true);
-			return defaultModuleLocation;
-		}
-
-		public ModuleResource getLibResource() {
-			ModuleResource defaultModuleLocation = new ModuleResource();
-
-			String targetDir = new File(moduleSourceTargetDirectory, "lib").getPath();
-			String libDirectory;
-			if (moduleSourceTargetDirectory != null) {
-				libDirectory = new File(new File(getModuleDirectory(), moduleSourceTargetDirectory), "lib").getAbsolutePath();
-			} else {
-				libDirectory = new File(getModuleDirectory(), "lib").getAbsolutePath();
-			}
-
-			defaultModuleLocation.setDirectory(libDirectory);
-			defaultModuleLocation.setFiltering(false);
-			defaultModuleLocation.setModuleTargetPath("lib");
-			defaultModuleLocation.setTargetPath(targetDir);
-			defaultModuleLocation.setSystemModule(true);
-			return defaultModuleLocation;
-		}
-	}
 
 	public MavenProject getProject() {
 		return project;

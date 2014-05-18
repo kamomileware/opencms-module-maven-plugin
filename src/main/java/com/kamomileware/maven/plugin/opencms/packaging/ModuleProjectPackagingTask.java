@@ -19,19 +19,18 @@ package com.kamomileware.maven.plugin.opencms.packaging;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Iterator;
-
+import com.kamomileware.maven.plugin.opencms.ModuleResource;
+import com.kamomileware.maven.plugin.opencms.native2ascii.Native2Ascii;
+import com.kamomileware.maven.plugin.opencms.util.PathSet;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.shared.filtering.MavenFilteringException;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.XmlStreamReader;
 
-import com.kamomileware.maven.plugin.opencms.ModuleResource;
-import com.kamomileware.maven.plugin.opencms.native2ascii.Native2Ascii;
-import com.kamomileware.maven.plugin.opencms.util.PathSet;
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * Handles the project own resources, that is: <ul <li>The list of web
@@ -118,7 +117,7 @@ public class ModuleProjectPackagingTask extends AbstractModulePackagingTask {
 					ModuleResource resource = new ModuleResource();
 					resource.setDirectory(new File(context.getWorkDirectory(), copyTargetPrefix).getAbsolutePath());
 					resource.setModuleWorkingPath(new File(context.getWorkDirectory(), "manifest"));
-					resource.setTargetPath("manifest/");
+					resource.setModuleTargetPath("manifest/");
 					resource.setN2aApply(true);
 					resource.setN2aConfig(context.getDescriptorsN2AConfig());
 					native2AsciiTask.perform(context, resource);
@@ -236,8 +235,6 @@ public class ModuleProjectPackagingTask extends AbstractModulePackagingTask {
 	 * 
 	 * @param context
 	 *            the packaging context
-	 * @param webinfDir
-	 *            the web-inf directory
 	 * @throws MojoFailureException
 	 *             if the web.xml is specified but does not exist
 	 * @throws MojoExecutionException
@@ -328,16 +325,16 @@ public class ModuleProjectPackagingTask extends AbstractModulePackagingTask {
 				"Copying module resources [" + resource.getDirectory() + "] to [" + context.getModuleDirectory().getAbsolutePath() + "]");
 
 		String prefix = toWorkDir ? resourceDir.getName() + File.separator : "";
-		if (resource.getTargetPath() != null && !resource.getTargetPath().isEmpty()) {
+		if (resource.getModuleTargetPath() != null && !resource.getModuleTargetPath().isEmpty()) {
 			// TODO make sure this thing is 100% safe
 			// MWAR-129 if targetPath is only a dot <targetPath>.</targetPath>
 			// or ./
 			// and the Resource is in a part of the warSourceDirectory the file
 			// from sources will override this
 			// that's we don't have to add the targetPath yep not nice but works
-			if (!StringUtils.equals(".", resource.getTargetPath()) && !StringUtils.equals("./", resource.getTargetPath())) {
+			if (!StringUtils.equals(".", resource.getModuleTargetPath()) && !StringUtils.equals("./", resource.getModuleTargetPath())) {
 
-				prefix = resource.getTargetPath() + File.separator;
+				prefix = resource.getModuleTargetPath() + File.separator;
 			}
 		}
 
@@ -366,7 +363,7 @@ public class ModuleProjectPackagingTask extends AbstractModulePackagingTask {
 		}
 
 		if (toWorkDir)
-		// && resource.getTargetPath() != null )
+		// && resource.getModuleTargetPath() != null )
 		{
 			resource.setModuleWorkingPath(context.getModuleDirectory());
 			resource.setDirectory(new File(context.getWorkDirectory(), resourceDir.getName()).getAbsolutePath());
