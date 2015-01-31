@@ -14,7 +14,7 @@ public interface ModulePostPackagingTask
 
     /**
      * Executes the post packaging task.
-     * <p/>
+     *
      * The packaging context hold all information regarding the module that
      * has been packaged.
      *

@@ -32,16 +32,16 @@ import org.codehaus.plexus.interpolation.ValueSource;
 
 /**
  * Utilities used to evaluate expression.
- * <p/>
+ *
  * TODO: this comes from the assembly plugin; refactor when it's shared.
- * <p/>
+ *
  * The expression might use any field of the {@link Artifact} interface. Some
  * examples might be:
  * <ul>
  * <li>@{artifactId}@-@{version}@.@{extension}@</li>
  * <li>@{artifactId}@.@{extension}@</li>
  * </ul>
- * 
+ *
  * @author Stephane Nicoll
  * @version $Id: MappingUtils.java 693788 2008-09-10 11:09:14Z olamy $
  */
@@ -49,7 +49,7 @@ public class MappingUtils {
 
 	/**
 	 * Evaluates the specified expression for the given artifact.
-	 * 
+	 *
 	 * @param expression
 	 *            the expression to evaluate
 	 * @param artifact

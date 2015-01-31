@@ -31,7 +31,7 @@ import org.codehaus.plexus.util.StringUtils;
 
 /**
  * Set of file's paths.
- * <p/>
+ *
  * The class extends functionality of a "normal" set of strings by a process of
  * the paths normalization. All paths are converted to unix form (slashes) and
  * they don't start with starting /.
@@ -50,7 +50,7 @@ public class PathSet
 
     /**
      * The method normalizes the path.
-     * <p/>
+     *
      * <ul>
      * <li>changes directory separator to unix's separator(/)</li>
      * <li>deletes all trailing slashes</li>
@@ -208,7 +208,7 @@ public class PathSet
 
     /**
      * Adds given prefix to all paths in the set.
-     * <p/>
+     *
      * The prefix should be ended by '/'. The generated paths are normalized.
      *
      * @param prefix to be added to all items
@@ -251,7 +251,7 @@ public class PathSet
     /*-------------------- Universal static methods ------------------------*/
     /**
      * The method normalizes the path.
-     * <p/>
+     *
      * <ul>
      * <li>changes directory separator to unix's separator(/)</li>
      * <li>deletes all trailing slashes</li>

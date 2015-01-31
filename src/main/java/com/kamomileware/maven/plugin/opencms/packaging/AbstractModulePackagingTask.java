@@ -57,18 +57,21 @@ public abstract class AbstractModulePackagingTask implements ModulePackagingTask
 	public static final String LIB_PATH = "lib/";
 
 	/**
+   * <p>
 	 * Copies the files if possible with an optional target prefix.
-	 * <p/>
+	 * </p>
+   * <p>
 	 * Copy uses a first-win strategy: files that have already been copied by
 	 * previous tasks are ignored. This method makes sure to update the list of
 	 * protected files which gives the list of files that have already been
 	 * copied.
-	 * <p/>
+	 * </p>
+   * <p>
 	 * If the structure of the source directory is not the same as the root of
 	 * the webapp, use the <tt>targetPrefix</tt> parameter to specify in which
 	 * particular directory the files should be copied. Use <tt>null</tt> to
 	 * copy the files with the same structure
-	 * 
+	 * </p>
 	 * @param sourceId
 	 *            the source id
 	 * @param context
@@ -82,6 +85,7 @@ public abstract class AbstractModulePackagingTask implements ModulePackagingTask
 	 *            the prefix to add to the target file name
 	 * @throws IOException
 	 *             if an error occurred while copying the files
+   * @throws MojoExecutionException
 	 */
 	protected void copyFiles(String sourceId, ModulePackagingContext context, File sourceBaseDir, PathSet sourceFilesSet,
 			String targetPrefix, boolean filtered, boolean toWorkDir) throws IOException, MojoExecutionException {
@@ -105,17 +109,17 @@ public abstract class AbstractModulePackagingTask implements ModulePackagingTask
 
 	/**
 	 * Copies the files if possible with an optional target prefix.
-	 * <p/>
+	 *
 	 * Copy uses a first-win strategy: files that have already been copied by
 	 * previous tasks are ignored. This method makes sure to update the list of
 	 * protected files which gives the list of files that have already been
 	 * copied.
-	 * <p/>
+	 *
 	 * If the structure of the source directory is not the same as the root of
 	 * the webapp, use the <tt>targetPrefix</tt> parameter to specify in which
 	 * particular directory the files should be copied. Use <tt>null</tt> to
 	 * copy the files with the same structure
-	 * 
+	 *
 	 * @param sourceId
 	 *            the source id
 	 * @param context
@@ -159,13 +163,13 @@ public abstract class AbstractModulePackagingTask implements ModulePackagingTask
 
 	/**
 	 * Copies the files if possible as is.
-	 * <p/>
+	 *
 	 * Copy uses a first-win strategy: files that have already been copied by
 	 * previous tasks are ignored. This method makes sure to update the list of
 	 * protected files which gives the list of files that have already been
 	 * copied.
-	 * 
-	 * @param sourceId
+	 *
+	 * @param id
 	 *            the source id
 	 * @param context
 	 *            the context to use
@@ -185,10 +189,10 @@ public abstract class AbstractModulePackagingTask implements ModulePackagingTask
 	/**
 	 * Copy the specified file if the target location has not yet already been
 	 * used.
-	 * <p/>
+	 *
 	 * The <tt>targetFileName</tt> is the relative path according to the root of
 	 * the generated OpenCms module.
-	 * 
+	 *
 	 * @param sourceId
 	 *            the source id
 	 * @param context
@@ -237,10 +241,10 @@ public abstract class AbstractModulePackagingTask implements ModulePackagingTask
 	/**
 	 * Copy the specified file if the target location has not yet already been
 	 * used and filter its content with the configured filter properties.
-	 * <p/>
+	 *
 	 * The <tt>targetFileName</tt> is the relative path according to the root of
 	 * the generated web application.
-	 * 
+	 *
 	 * @param sourceId
 	 *            the source id
 	 * @param context
@@ -281,7 +285,7 @@ public abstract class AbstractModulePackagingTask implements ModulePackagingTask
 
 	/**
 	 * Unpacks the specified file to the specified directory.
-	 * 
+	 *
 	 * @param context
 	 *            the packaging context
 	 * @param file
@@ -316,8 +320,8 @@ public abstract class AbstractModulePackagingTask implements ModulePackagingTask
 	 * <code>destination</code> will be overwritten if it already exists. If the
 	 * flag is <tt>true</tt> destination will be overwritten if it's not up to
 	 * date.
-	 * <p/>
-	 * 
+	 *
+	 *
 	 * @param context
 	 *            the packaging context
 	 * @param source
@@ -353,7 +357,7 @@ public abstract class AbstractModulePackagingTask implements ModulePackagingTask
 	/**
 	 * Returns the file to copy. If the includes are <tt>null</tt> or empty, the
 	 * default includes are used.
-	 * 
+	 *
 	 * @param baseDir
 	 *            the base directory to start from
 	 * @param includes
@@ -457,7 +461,7 @@ public abstract class AbstractModulePackagingTask implements ModulePackagingTask
 	/**
 	 * Returns a list of filenames that should be copied over to the destination
 	 * directory.
-	 * 
+	 *
 	 * @param resource
 	 *            the resource to be scanned
 	 * @return the array of filenames, relative to the sourceDir
@@ -484,7 +488,7 @@ public abstract class AbstractModulePackagingTask implements ModulePackagingTask
 	/**
 	 * Returns a list of filenames that should be copied over to the destination
 	 * directory.
-	 * 
+	 *
 	 * @param resource
 	 *            the resource to be scanned
 	 * @return the array of filenames, relative to the sourceDir
@@ -507,15 +511,16 @@ public abstract class AbstractModulePackagingTask implements ModulePackagingTask
 
 	/**
 	 * Returns the final name of the specified artifact.
-	 * <p/>
+	 *
 	 * If the <tt>outputFileNameMapping</tt> is set, it is used, otherwise the
 	 * standard naming scheme is used.
-	 * 
+	 *
 	 * @param context
 	 *            the packaging context
 	 * @param artifact
 	 *            the artifact
 	 * @return the converted filename of the artifact
+   * @throws InterpolationException
 	 */
 	protected String getArtifactFinalName(ModulePackagingContext context, Artifact artifact) throws InterpolationException {
 		if (context.getOutputFileNameMapping() != null) {

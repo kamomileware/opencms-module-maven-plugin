@@ -33,8 +33,8 @@ import com.kamomileware.maven.plugin.opencms.util.PathSet;
 
 /**
  * Handles the classes directory that needs to be packaged in the web application.
- * <p/>
- * Based on the {@link WarPackagingContext#archiveClasses()} flag the resources
+ *
+ * Based on the WarPackagingContext#archiveClasses() flag the resources
  * either copied into to <tt>WEB-INF/classes</tt> directory or archived in a jar
  * within the <tt>WEB-INF/lib</tt> directory.
  *
@@ -119,7 +119,7 @@ public class ClassesPackagingTask
             final ClassesPackager packager = new ClassesPackager();
             packager.packageClasses( context.getClassesDirectory(), jarFile, context.getJarArchiver(),
                                      project, context.getArchive() );
-            
+
         }
         else
         {

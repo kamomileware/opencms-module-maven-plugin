@@ -25,13 +25,14 @@ import java.util.Map.Entry;
  * and is separated by two different parts:
  * <ul><li>the descriptors section, that just apply the descriptors files to the manifest, and</li>
  * <li>the folders and files section, each with OpenCms virtual file system properties and security </li></ul>
- * The file and folders properties and security restrictions are extracted from the properties file 
+ * The file and folders properties and security restrictions are extracted from the properties file
  * associated to the item. <p>The properties file for a file resource is located in the <code>./__properties</code>
- * directory with the same name plus the <code>.properties</code> extension. The properties file for a folder resource is 
- * located in <code>../__properties</code> directory with <code>__</code> prefix and the same name plus the 
- * <code>.properties</code> extension.<br/>There are especial properties for the file resources that affect the 
+ * directory with the same name plus the <code>.properties</code> extension. The properties file for a folder resource is
+ * located in <code>../__properties</code> directory with <code>__</code> prefix and the same name plus the
+ * <code>.properties</code> extension.
+ * There are especial properties for the file resources that affect the
  * VFS descriptor:
- * <ul><li><code>manifest.type.i</code> and <code>manifest.type.s</code>: indicates the type for the resource other 
+ * <ul><li><code>manifest.type.i</code> and <code>manifest.type.s</code>: indicates the type for the resource other
  * than the defaults as <code>plain</code> for files, and <code>folder</code> for directories.</li>
  * <li><code>manifest.destination.i</code>: path for the resource assigned when the module is imported</li>
  * <li><code>manifest.datecreated.i</code>: resource creation date</li>
@@ -39,10 +40,10 @@ import java.util.Map.Entry;
  * <li><code>manifest.usercreated.i</code>: user that created the resource</li>
  * <li><code>manifest.userlastmodified.i</code>: user that made the last modification of the resource</li>
  * </ul>
- * </p>
+ *
  * <p>The security descriptors apply the same rules as the properties files but use <code>.acl</code> extension
  * instead.</p>
- * 
+ *
  * @author jagarcia
  *
  */
@@ -79,7 +80,7 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 	@SuppressWarnings("unused")
 	private int propCounter = 0;
 	// properties filename for module part
-	final private static String module_info = "module.properties"; 
+	final private static String module_info = "module.properties";
 
 	/*
 	 * (non-Javadoc)
@@ -147,7 +148,7 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 	/**
 	 * Builds the beans for every file selected and the directories under they
 	 * sit.
-	 * 
+	 *
 	 * @param context
 	 *            information with locations to add to the module.
 	 * @param manifestBean
@@ -209,7 +210,7 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param manifestBean
 	 * @param location
 	 * @return
@@ -228,17 +229,16 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 		return destinationPath;
 	}
 
-	/**
-	 * 
-	 * @param file
-	 * @param props
-	 * @param base
-	 * @param destinationPath
-	 * @return
-	 * @throws IOException
-	 * @throws BuildFailureException
-	 */
-	protected ResourceFileBean buildResourceFileBean(ModulePackagingContext context, ModuleResource moduleResource, String resourcePath)
+  /**
+   *
+   * @param context
+   * @param moduleResource
+   * @param resourcePath
+   * @return
+   * @throws IOException
+   * @throws MojoFailureException
+   */
+  protected ResourceFileBean buildResourceFileBean(ModulePackagingContext context, ModuleResource moduleResource, String resourcePath)
 			throws IOException, MojoFailureException {
 		if (context.getLog().isDebugEnabled()) {
 			context.getLog().debug("Creating Manifest entry for file: " + resourcePath);
@@ -304,7 +304,7 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 		}
 
 		// Properties
-		Map<String, String> vfsProperties = new HashMap<String, String>(props.size()), 
+		Map<String, String> vfsProperties = new HashMap<String, String>(props.size()),
 				sharedProperties = new HashMap<String, String>(props.size());
 		extractVfsProperties(props, sharedProperties, vfsProperties);
 		bean.setProperties(vfsProperties.entrySet());
@@ -472,21 +472,21 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 				ManifestBean.dateFormat.format(new Date(file.lastModified())));
 
 		bean.setDatecreated(
-				props.containsKey("manifest.datecreated.i") ? 
-						(String) props.get("manifest.datecreated.i") 
+				props.containsKey("manifest.datecreated.i") ?
+						(String) props.get("manifest.datecreated.i")
 						: defaultDate);
 		bean.setDatelastmodified(
-				props.containsKey("manifest.datelastmodified.i") ? 
+				props.containsKey("manifest.datelastmodified.i") ?
 						(String) props.get("manifest.datelastmodified.i")
 						: defaultDate);
 
 		// Users
 		bean.setUsercreated(
-				props.containsKey("manifest.usercreated.i") ? 
-						(String) props.get("manifest.usercreated.i") 
+				props.containsKey("manifest.usercreated.i") ?
+						(String) props.get("manifest.usercreated.i")
 						: "Admin");
 		bean.setUserlastmodified(
-				props.containsKey("manifest.userlastmodified.i") ? 
+				props.containsKey("manifest.userlastmodified.i") ?
 						(String) props.get("manifest.userlastmodified.i")
 						: "Admin");
 	}
@@ -525,13 +525,13 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 	}
 
 	protected Filetype calculateBeanType(File file, Properties props) {
-		String typeStr = ManifestUtils.isNotNullOrZero(props.get("manifest.type.i")) ? 
+		String typeStr = ManifestUtils.isNotNullOrZero(props.get("manifest.type.i")) ?
 				(String) props.get("manifest.type.i")
 				: (String) props.get("manifest.type.s");
 
-		Filetype type = ManifestUtils.isNotNullOrZero(typeStr) ? 
-				Filetype.newCustomFiletype(typeStr) : 
-				file.isDirectory() ? 
+		Filetype type = ManifestUtils.isNotNullOrZero(typeStr) ?
+				Filetype.newCustomFiletype(typeStr) :
+				file.isDirectory() ?
 						Filetype.folder
 						: Filetype.calculateType(file);
 
@@ -544,7 +544,7 @@ public class ManifestGenerationTask extends AbstractModulePackagingTask {
 		target.setUsercreated(source.getUsercreated());
 		target.setUserlastmodified(source.getUserlastmodified());
 		String destination = target.getDestination();
-		target.setDestination(destination.endsWith(".sibling") ? 
+		target.setDestination(destination.endsWith(".sibling") ?
 				destination.substring(0, destination.length() - ".sibling".length())
 				: destination);
 		target.setUuidresource(source.getUuidresource());

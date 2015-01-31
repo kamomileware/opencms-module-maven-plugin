@@ -36,7 +36,7 @@ public interface Native2AsciiAdapter {
      * @param srcFile the source to convert
      * @param destFile where to send output to
      * @return whether the conversion has been successful.
-     * @throws BuildException if there was a problem.
+     * @throws MojoExecutionException if there was a problem.
      */
     boolean convert(Native2Ascii args, File srcFile, File destFile)
         throws MojoExecutionException;

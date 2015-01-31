@@ -11,6 +11,7 @@ import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.apache.maven.shared.filtering.MavenFileFilter;
@@ -32,62 +33,55 @@ import java.util.*;
  * <code>${generate.manifest}</code> and module properties descriptor are set.
  * This goal is binded to <code>package</code> building phase for the
  * opencms-module projects.
- * 
+ *
  * @author jagarcia
- * @goal module
- * @phase package
- * @requiresDependencyResolution runtime+compile
  */
+@Mojo(name= "module", defaultPhase = LifecyclePhase.PACKAGE, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class ModuleMojo extends AbstractModuleMojo {
 
 	/**
 	 * The directory for the generated module.
-	 * 
+	 *
 	 * @parameter property="project.build.directory"
 	 * @required
 	 */
+
 	private String outputDirectory;
 
 	/**
 	 * The name of the generated module.
-	 * 
-	 * @parameter property="project.build.finalName"
-	 * @required
 	 */
+  @Parameter( property="project.build.finalName", required = true)
 	private String moduleName;
 
 	/**
 	 * Classifier to add to the generated module file. If given, the artifact
 	 * will be an attachment instead. The classifier will not be applied to the
 	 * jar file of the project - only to the module file.
-	 * 
-	 * @parameter
 	 */
+  @Parameter
 	private String classifier;
 
 	/**
 	 * The comma separated list of tokens to exclude from the module before
 	 * packaging.
-	 * 
-	 * @parameter alias="packagingExcludes"
 	 */
+  @Parameter(alias = "packagingExcludes")
 	private String packagingExcludes;
 
 	/**
 	 * The comma separated list of tokens to include in the module before
 	 * packaging. By default everything is included.
-	 * 
-	 * @parameter alias="packagingIncludes"
 	 */
+  @Parameter (alias="packagingIncludes")
 	private String packagingIncludes;
 
 	/**
 	 * Whether this is the main artifact being built. Set to <code>false</code>
 	 * if you don't want to install or deploy it to the local repository instead
 	 * of the default one in an execution.
-	 * 
-	 * @parameter property="primaryArtifact" default-value="true"
 	 */
+  @Parameter (property="primaryArtifact", defaultValue = "true")
 	private boolean primaryArtifact = true;
 
 	/**
@@ -95,33 +89,31 @@ public class ModuleMojo extends AbstractModuleMojo {
 	 * missing. Set to <code>false</code> if you want you module built without a
 	 * <code>manifest.xml</code> file, besides the module won't be installable
 	 * on OpenCms system.
-	 * 
-	 * @parameter property="failOnMissingManifestXml" default-value="true"
 	 */
+  @Parameter (property="failOnMissingManifestXml", defaultValue="true")
 	private boolean failOnMissingManifestXml = true;
 
 	/**
 	 * The classifier to use for the attached classes artifact.
-	 * 
-	 * @parameter default-value=""
 	 */
+  @Parameter (defaultValue="")
 	private String classesClassifier = "";
 
 	/**
 	 * The archiver.
-	 * 
-	 * @component role="org.codehaus.plexus.archiver.Archiver" roleHint="jar"
 	 */
+  @Component (role=org.codehaus.plexus.archiver.Archiver.class, hint="jar")
 	private JarArchiver moduleArchiver;
 
 	/**
-	 * @component
+	 *
 	 */
+  @Component
 	private MavenProjectHelper projectHelper;
 
 	/**
 	 * Executes the ModuleMojo on the current project.
-	 * 
+	 *
 	 * @throws MojoExecutionException
 	 *             if an error occurred while building the module
 	 */
@@ -143,7 +135,7 @@ public class ModuleMojo extends AbstractModuleMojo {
 
 	/**
 	 * Generates the module according to the <tt>mode</tt> attribute.
-	 * 
+	 *
 	 * @param moduleFile
 	 *            the target module file
 	 * @throws IOException
@@ -281,7 +273,7 @@ public class ModuleMojo extends AbstractModuleMojo {
     /**
      * Builds the module for the specified project with the new packaging task
      * thingy
-     * <p/>
+     *
      * Classes, libraries and tld files are copied to the
      * <tt>webappDirectory</tt> during this phase.
      *

@@ -39,10 +39,10 @@ public abstract class DefaultNative2Ascii implements Native2AsciiAdapter {
      * @param srcFile the source file.
      * @param destFile the destination file.
      * @return run if the conversion was successful.
-     * @throws BuildException if there is a problem.
-     * (delegated to {@link #setup setup}), adding the file names
-     * (delegated to {@link #addFiles addFiles}) and running the tool
-     * (delegated to {@link #run run}).
+     * @throws MojoExecutionException if there is a problem.
+     * (delegated to {@link #setup }), adding the file names
+     * (delegated to {@link #addFiles }) and running the tool
+     * (delegated to {@link #run }).
      */
     public final boolean convert(Native2Ascii args, File srcFile,
                                  File destFile) throws MojoExecutionException {
@@ -59,9 +59,8 @@ public abstract class DefaultNative2Ascii implements Native2AsciiAdapter {
      * handled here.</p>
      *
      * @param cmd Command line to add to
-     * @param args provides the user-setting and access to Ant's
-     * logging system.
-     * @throws BuildException if there was a problem.
+     * @param args provides the user-setting and access to Ant's logging system.
+     * @throws MojoExecutionException if there was a problem.
      */
     protected void setup(Commandline cmd, Native2Ascii args) throws MojoExecutionException {
         if (args.getEncoding() != null) {
@@ -81,7 +80,7 @@ public abstract class DefaultNative2Ascii implements Native2AsciiAdapter {
      * @param log provides access to Ant's logging system.
      * @param src the source file
      * @param dest the destination file
-     * @throws BuildException if there was a problem.
+     * @throws MojoExecutionException if there was a problem.
      */
     protected void addFiles(Commandline cmd, Native2Ascii log, File src, File dest)
     	throws MojoExecutionException
@@ -96,7 +95,7 @@ public abstract class DefaultNative2Ascii implements Native2AsciiAdapter {
      * @param cmd Command line to execute
      * @param log provides access to Ant's logging system.
      * @return whether execution was successful
-     * @throws BuildException if there was a problem.
+     * @throws MojoExecutionException if there was a problem.
      */
     protected abstract boolean run(Commandline cmd, Native2Ascii log)
         throws MojoExecutionException;

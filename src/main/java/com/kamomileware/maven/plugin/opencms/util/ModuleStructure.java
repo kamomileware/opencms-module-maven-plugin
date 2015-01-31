@@ -36,10 +36,10 @@ import org.codehaus.plexus.util.StringUtils;
  * Represents the structure of a web application composed of multiple overlays.
  * Each overlay is registered within this structure with the set of files it
  * holds.
- * <p/>
+ *
  * Note that this structure is persisted to disk at each invocation to store
  * which owner holds which path (file).
- * 
+ *
  * @author Stephane Nicoll
  * @version $Id: WebappStructure.java 712569 2008-11-09 21:58:43Z olamy $
  */
@@ -61,7 +61,7 @@ public class ModuleStructure {
 
 	/**
 	 * Creates a new empty instance.
-	 * 
+	 *
 	 * @param dependencies
 	 *            the dependencies of the project
 	 */
@@ -73,7 +73,7 @@ public class ModuleStructure {
 
 	/**
 	 * Creates a new instance with the specified cache.
-	 * 
+	 *
 	 * @param dependencies
 	 *            the dependencies of the project
 	 * @param cache
@@ -92,7 +92,7 @@ public class ModuleStructure {
 
 	/**
 	 * Returns the list of {@link DependencyInfo} for the project.
-	 * 
+	 *
 	 * @return the dependencies information of the project
 	 */
 	public List<DependencyInfo> getDependenciesInfo() {
@@ -101,7 +101,7 @@ public class ModuleStructure {
 
 	/**
 	 * Returns the dependencies of the project.
-	 * 
+	 *
 	 * @return the dependencies of the project
 	 */
 	public List<Dependency> getDependencies() {
@@ -119,7 +119,7 @@ public class ModuleStructure {
 
 	/**
 	 * Specify if the specified <tt>path</tt> is registered or not.
-	 * 
+	 *
 	 * @param path
 	 *            the relative path from the webapp root directory
 	 * @return true if the path is registered, false otherwise
@@ -133,7 +133,7 @@ public class ModuleStructure {
 	 * Registers the specified path for the specified owner. Returns
 	 * <tt>true</tt> if the path is not already registered, <tt>false</tt>
 	 * otherwise.
-	 * 
+	 *
 	 * @param id
 	 *            the owner of the path
 	 * @param path
@@ -152,7 +152,7 @@ public class ModuleStructure {
 	/**
 	 * Registers the specified path for the specified owner. Invokes the
 	 * <tt>callback</tt> with the result of the registration.
-	 * 
+	 *
 	 * @param id
 	 *            the owner of the path
 	 * @param path
@@ -190,7 +190,7 @@ public class ModuleStructure {
 	/**
 	 * Returns the owner of the specified <tt>path</tt>. If the file is not
 	 * registered, returns <tt>null</tt>
-	 * 
+	 *
 	 * @param path
 	 *            the relative path from the webapp root directory
 	 * @return the owner or <tt>null</tt>.
@@ -217,11 +217,11 @@ public class ModuleStructure {
 	 * Returns the owners. Note that this the returned {@link Set} may be
 	 * inconsistent since it represents a persistent cache across multiple
 	 * invocations.
-	 * <p/>
+	 * <p>
 	 * For instance, if an overlay was removed in this execution, it will be
 	 * still be there till the cache is cleaned. This happens when the clean
 	 * mojo is invoked.
-	 * 
+	 * </p>
 	 * @return the list of owners
 	 */
 	public Set<String> getOwners() {
@@ -230,7 +230,7 @@ public class ModuleStructure {
 
 	/**
 	 * Returns all paths that have been registered so far.
-	 * 
+	 *
 	 * @return all registered path
 	 */
 	public PathSet getFullStructure() {
@@ -239,7 +239,7 @@ public class ModuleStructure {
 
 	/**
 	 * Returns the list of registered files for the specified owner.
-	 * 
+	 *
 	 * @param id
 	 *            the owner
 	 * @return the list of files registered for that owner
@@ -255,7 +255,7 @@ public class ModuleStructure {
 
 	/**
 	 * Analyze the dependencies of the project using the specified callback.
-	 * 
+	 *
 	 * @param callback
 	 *            the callback to use to report the result of the analysis
 	 */
@@ -315,7 +315,7 @@ public class ModuleStructure {
 
 	/**
 	 * Registers the target file name for the specified artifact.
-	 * 
+	 *
 	 * @param artifact
 	 *            the artifact
 	 * @param targetFileName
@@ -334,10 +334,10 @@ public class ModuleStructure {
 	/**
 	 * Returns the cached target file name that matches the specified
 	 * dependency, that is the target file name of the previous run.
-	 * <p/>
+	 *
 	 * The dependency object may have changed so the comparison is based on
 	 * basic attributes of the dependency.
-	 * 
+	 *
 	 * @param dependency
 	 *            a dependency
 	 * @return the target file name of the last run for this dependency
@@ -371,7 +371,7 @@ public class ModuleStructure {
 
 	/**
 	 * Find a dependency that is similar from the specified dependency.
-	 * 
+	 *
 	 * @param dependency
 	 *            the dependency to find
 	 * @param dependencies
@@ -439,10 +439,10 @@ public class ModuleStructure {
 		/**
 		 * Called if the <tt>targetFilename</tt> for the specified
 		 * <tt>ownerId</tt> has been registered successfully.
-		 * <p/>
+		 *
 		 * This means that the <tt>targetFilename</tt> was unknown and has been
 		 * registered successfully.
-		 * 
+		 *
 		 * @param ownerId
 		 *            the ownerId
 		 * @param targetFilename
@@ -455,10 +455,10 @@ public class ModuleStructure {
 		/**
 		 * Called if the <tt>targetFilename</tt> for the specified
 		 * <tt>ownerId</tt> has already been registered.
-		 * <p/>
+		 *
 		 * This means that the <tt>targetFilename</tt> was known and belongs to
 		 * the specified owner.
-		 * 
+		 *
 		 * @param ownerId
 		 *            the ownerId
 		 * @param targetFilename
@@ -472,10 +472,10 @@ public class ModuleStructure {
 		 * Called if the registration of the <tt>targetFilename</tt> for the
 		 * specified <tt>ownerId</tt> has been refused since the path already
 		 * belongs to the <tt>actualOwnerId</tt>.
-		 * <p/>
+		 *
 		 * This means that the <tt>targetFilename</tt> was known and does not
 		 * belong to the specified owner.
-		 * 
+		 *
 		 * @param ownerId
 		 *            the ownerId
 		 * @param targetFilename
@@ -491,12 +491,12 @@ public class ModuleStructure {
 		 * Called if the <tt>targetFilename</tt> for the specified
 		 * <tt>ownerId</tt> has been registered successfully by superseding a
 		 * <tt>deprecatedOwnerId</tt>, that is the previous owner of the file.
-		 * <p/>
+		 *
 		 * This means that the <tt>targetFilename</tt> was known but for another
 		 * owner. This usually happens after a project's configuration change.
 		 * As a result, the file has been registered successfully to the new
 		 * owner.
-		 * 
+		 *
 		 * @param ownerId
 		 *            the ownerId
 		 * @param targetFilename
@@ -513,11 +513,11 @@ public class ModuleStructure {
 		 * <tt>ownerId</tt> has been registered successfully by superseding a
 		 * <tt>unknownOwnerId</tt>, that is an owner that does not exist anymore
 		 * in the current project.
-		 * <p/>
+		 *
 		 * This means that the <tt>targetFilename</tt> was known but for an
 		 * owner that does not exist anymore. Hence the file has been registered
 		 * successfully to the new owner.
-		 * 
+		 *
 		 * @param ownerId
 		 *            the ownerId
 		 * @param targetFilename
@@ -537,7 +537,7 @@ public class ModuleStructure {
 
 		/**
 		 * Called if the dependency has not changed since the last build.
-		 * 
+		 *
 		 * @param dependency
 		 *            the dependency that hasn't changed
 		 */
@@ -545,7 +545,7 @@ public class ModuleStructure {
 
 		/**
 		 * Called if a new dependency has been added since the last build.
-		 * 
+		 *
 		 * @param dependency
 		 *            the new dependency
 		 */
@@ -553,7 +553,7 @@ public class ModuleStructure {
 
 		/**
 		 * Called if the dependency has been removed since the last build.
-		 * 
+		 *
 		 * @param dependency
 		 *            the dependency that has been removed
 		 */
@@ -562,7 +562,7 @@ public class ModuleStructure {
 		/**
 		 * Called if the version of the dependency has changed since the last
 		 * build.
-		 * 
+		 *
 		 * @param dependency
 		 *            the dependency
 		 * @param previousVersion
@@ -573,7 +573,7 @@ public class ModuleStructure {
 		/**
 		 * Called if the scope of the dependency has changed since the last
 		 * build.
-		 * 
+		 *
 		 * @param dependency
 		 *            the dependency
 		 * @param previousScope
@@ -584,7 +584,7 @@ public class ModuleStructure {
 		/**
 		 * Called if the optional flag of the dependency has changed since the
 		 * last build.
-		 * 
+		 *
 		 * @param dependency
 		 *            the dependency
 		 * @param previousOptional
@@ -594,7 +594,7 @@ public class ModuleStructure {
 
 		/**
 		 * Called if the dependency has been updated for unknown reason.
-		 * 
+		 *
 		 * @param dependency
 		 *            the dependency
 		 * @param previousDep

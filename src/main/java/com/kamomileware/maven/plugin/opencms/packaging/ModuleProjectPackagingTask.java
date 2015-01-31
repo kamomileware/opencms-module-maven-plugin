@@ -33,12 +33,12 @@ import java.io.IOException;
 import java.util.Iterator;
 
 /**
- * Handles the project own resources, that is: <ul <li>The list of web
+ * Handles the project own resources, that is: <ul> <li>The list of web
  * resources, if any</li> <li>The content of the module directory if it exists</li>
  * <li>The custom deployment descriptor(s), if any</li> <li>The content of the
  * classes directory if it exists</li> <li>The dependencies of the project</li>
  * </ul>
- * 
+ *
  * @author Stephane Nicoll
  * @version $Id: WarProjectPackagingTask.java 743319 2009-02-11 13:06:59Z
  *          dennisl $
@@ -131,12 +131,13 @@ public class ModuleProjectPackagingTask extends AbstractModulePackagingTask {
 
 	/**
 	 * Handles the module resources.
-	 * 
+	 *
 	 * @param context
 	 *            the packaging context
 	 * @throws MojoExecutionException
 	 *             if a resource could not be copied
 	 * @throws MojoFailureException
+   *              construction fail
 	 */
 	protected void handleModuleResources(ModulePackagingContext context) throws MojoExecutionException, MojoFailureException {
 		for (int i = 0; i < moduleResources.length; i++) {
@@ -171,7 +172,7 @@ public class ModuleProjectPackagingTask extends AbstractModulePackagingTask {
 
 	/**
 	 * Handles the module sources.
-	 * 
+	 *
 	 * @param context
 	 *            the packaging context
 	 * @throws MojoExecutionException
@@ -204,7 +205,7 @@ public class ModuleProjectPackagingTask extends AbstractModulePackagingTask {
 
 	/**
 	 * Handles the webapp artifacts.
-	 * 
+	 *
 	 * @param context
 	 *            the packaging context
 	 * @throws MojoExecutionException
@@ -217,7 +218,7 @@ public class ModuleProjectPackagingTask extends AbstractModulePackagingTask {
 
 	/**
 	 * Handles the module classes.
-	 * 
+	 *
 	 * @param context
 	 *            the packaging context
 	 * @throws MojoExecutionException
@@ -232,7 +233,7 @@ public class ModuleProjectPackagingTask extends AbstractModulePackagingTask {
 	 * Handles the deployment descriptors, if specified. Note that the behavior
 	 * here is slightly different since the customized entry always win, even if
 	 * an overlay has already packaged a web.xml previously.
-	 * 
+	 *
 	 * @param context
 	 *            the packaging context
 	 * @throws MojoFailureException
@@ -280,7 +281,7 @@ public class ModuleProjectPackagingTask extends AbstractModulePackagingTask {
 
 	/**
 	 * Get the encoding from an XML-file.
-	 * 
+	 *
 	 * @param webXml
 	 *            the XML-file
 	 * @return The encoding of the XML-file, or UTF-8 if it's not specified in
@@ -301,11 +302,13 @@ public class ModuleProjectPackagingTask extends AbstractModulePackagingTask {
 
 	/**
 	 * Copies module moduleResources from the specified directory.
-	 * 
+	 *
 	 * @param context
 	 *            the war packaging context to use
 	 * @param resource
 	 *            the resource to copy
+   * @param toWorkDir
+   *            use the work dir for copying
 	 * @throws IOException
 	 *             if an error occurred while copying the resources
 	 * @throws MojoExecutionException

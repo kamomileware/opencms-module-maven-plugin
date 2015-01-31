@@ -425,9 +425,7 @@ public class Commandline implements Cloneable {
      * surround the argument by double quotes.</p>
      * @param argument the argument to quote if necessary.
      * @return the quoted argument.
-     * @throws MojoExecutionException
-     * @exception BuildException if the argument contains both, single
-     *                           and double quotes.
+     * @throws MojoExecutionException if the argument contains both, single and double quotes.
      */
     public static String quoteArgument(String argument) throws MojoExecutionException {
         if (argument.indexOf("\"") > -1) {
@@ -553,7 +551,7 @@ public class Commandline implements Cloneable {
     /**
      * Generate a deep clone of the contained object.
      * @return a clone of the contained object
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
      */
     @SuppressWarnings("unchecked")
 	public Object clone() throws CloneNotSupportedException {
@@ -592,7 +590,7 @@ public class Commandline implements Cloneable {
 
     /**
      * Return a String that describes the command and arguments suitable for
-     * verbose output before a call to <code>Runtime.exec(String[])<code>.
+     * verbose output before a call to <code>Runtime.exec(String[])</code>.
      * @return a string that describes the command and arguments.
      * @since Ant 1.5
      */
@@ -602,7 +600,7 @@ public class Commandline implements Cloneable {
 
     /**
      * Return a String that describes the arguments suitable for
-     * verbose output before a call to <code>Runtime.exec(String[])<code>.
+     * verbose output before a call to <code>Runtime.exec(String[])</code>.
      * @return a string that describes the arguments.
      * @since Ant 1.5
      */
@@ -612,7 +610,7 @@ public class Commandline implements Cloneable {
 
     /**
      * Return a String that describes the command and arguments suitable for
-     * verbose output before a call to <code>Runtime.exec(String[])<code>.
+     * verbose output before a call to <code>Runtime.exec(String[])</code>.
      * @param line the Commandline to describe.
      * @return a string that describes the command and arguments.
      * @since Ant 1.5
@@ -623,7 +621,7 @@ public class Commandline implements Cloneable {
 
     /**
      * Return a String that describes the arguments suitable for
-     * verbose output before a call to <code>Runtime.exec(String[])<code>.
+     * verbose output before a call to <code>Runtime.exec(String[])</code>.
      * @param line the Commandline whose arguments to describe.
      * @return a string that describes the arguments.
      * @since Ant 1.5
@@ -634,7 +632,7 @@ public class Commandline implements Cloneable {
 
     /**
      * Return a String that describes the command and arguments suitable for
-     * verbose output before a call to <code>Runtime.exec(String[])<code>.
+     * verbose output before a call to <code>Runtime.exec(String[])</code>.
      *
      * <p>This method assumes that the first entry in the array is the
      * executable to run.</p>
@@ -660,7 +658,7 @@ public class Commandline implements Cloneable {
 
     /**
      * Return a String that describes the arguments suitable for
-     * verbose output before a call to <code>Runtime.exec(String[])<code>.
+     * verbose output before a call to <code>Runtime.exec(String[])</code>.
      * @param args the command line to describe as an array of strings.
      * @return a string that describes the arguments.
      * @since Ant 1.5
@@ -671,7 +669,7 @@ public class Commandline implements Cloneable {
 
     /**
      * Return a String that describes the arguments suitable for
-     * verbose output before a call to <code>Runtime.exec(String[])<code>.
+     * verbose output before a call to <code>Runtime.exec(String[])</code>.
      *
      * @param args the command line to describe as an array of strings.
      * @param offset ignore entries before this index.
