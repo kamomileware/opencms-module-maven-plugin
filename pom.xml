@@ -4,12 +4,12 @@
   <parent>
     <groupId>com.kamomileware.maven.plugin</groupId>
     <artifactId>maven-plugins-parent</artifactId>
-    <version>2</version>
+    <version>3-SNAPSHOT</version>
   </parent>
 
   <groupId>com.kamomileware.maven.plugin.opencms</groupId>
   <artifactId>opencms-module-maven-plugin</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>OpenCms Module Maven Plugin</name>
@@ -21,7 +21,7 @@
     <connection>scm:git:git@github.com:kamomileware/opencms-module-maven-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:kamomileware/opencms-module-maven-plugin.git</developerConnection>
     <url>scm:git:git@github.com:kamomileware/opencms-module-maven-plugin.git</url>
-    <tag>opencms-module-maven-plugin-0.1.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <contributors>
