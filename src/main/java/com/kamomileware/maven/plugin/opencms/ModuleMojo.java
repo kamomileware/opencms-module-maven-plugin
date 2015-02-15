@@ -41,11 +41,8 @@ public class ModuleMojo extends AbstractModuleMojo {
 
 	/**
 	 * The directory for the generated module.
-	 *
-	 * @parameter property="project.build.directory"
-	 * @required
 	 */
-
+  @Parameter (property="project.build.directory",required = true)
 	private String outputDirectory;
 
 	/**

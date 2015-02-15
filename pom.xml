@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.kamomileware.maven.plugin</groupId>
     <artifactId>maven-plugins-parent</artifactId>
-    <version>2</version>
+    <version>3-SNAPSHOT</version>
   </parent>
 
   <groupId>com.kamomileware.maven.plugin.opencms</groupId>
@@ -12,7 +12,7 @@
   <version>0.1.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
-  <name>OpenCms Module Maven Plugin</name>
+  <name>opencms-module-maven-plugin - OpenCms Module Maven Plugin</name>
   <description>Builds a OpenCms module file from a "opencms-module" project, generating a full-blown manifest from the
     project files and descriptors
   </description>
@@ -24,14 +24,24 @@
     <tag>opencms-module-maven-plugin-0.1.0</tag>
   </scm>
 
+  <distributionManagement>
+    <site>
+      <id>kamomileware.git.server</id>
+      <url>gitsite:git@github.com/kamomileware/${project.artifactId}.git</url>
+    </site>
+  </distributionManagement>
+
   <contributors>
     <contributor>
       <organization>VDOS Stochastics</organization>
       <organizationUrl>http://www.vdos.com</organizationUrl>
-      <email>info@vdos.com</email>
+    </contributor>
+    <contributor>
+      <name>Ismael El-Kadaoui</name>
+      <organization>Efron Consulting</organization>
+      <organizationUrl>http://www.efronconsulting.com</organizationUrl>
     </contributor>
   </contributors>
-
   <properties>
     <mavenVersion>2.2.1</mavenVersion>
     <compileSource>1.5</compileSource>
@@ -42,7 +52,6 @@
     <groovy-eclipse-batch>2.0.4-04</groovy-eclipse-batch>
     <openJpaVersion>2.2.0</openJpaVersion>
   </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -128,7 +137,6 @@
       <version>${mavenPluginPluginVersion}</version>
       <scope>provided</scope>
     </dependency>
-
     <!-- test -->
     <dependency>
       <groupId>junit</groupId>
@@ -143,27 +151,4 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-plugin-plugin</artifactId>
-        <configuration>
-          <extractors>
-            <extractor>java-annotations</extractor>
-          </extractors>
-        </configuration>
-        <executions>
-          <execution>
-            <id>help-goal</id>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>helpmojo</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 </project>
