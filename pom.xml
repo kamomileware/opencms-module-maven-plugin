@@ -28,13 +28,13 @@
   <scm>
     <connection>scm:git:git@github.com:kamomileware/opencms-module-maven-plugin.git</connection>
     <developerConnection>scm:git:git@kw.github.com:kamomileware/opencms-module-maven-plugin.git</developerConnection>
-    <url>https://github.com:kamomileware/opencms-module-maven-plugin.git</url>
+    <url>https://github.com:kamomileware/${project.artifactId}</url>
     <tag>develop</tag>
   </scm>
   <distributionManagement>
     <site>
       <id>kamomileware.git.server</id>
-      <url>gitsite:git@kw.github.com/kamomileware/${project.artifactId}</url>
+      <url>gitsite:git@kw.github.com/kamomileware/${project.artifactId}.git</url>
     </site>
   </distributionManagement>
   <properties>
