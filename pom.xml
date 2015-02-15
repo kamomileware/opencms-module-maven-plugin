@@ -1,36 +1,31 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <parent>
     <groupId>com.kamomileware.maven.plugin</groupId>
     <artifactId>maven-plugins-parent</artifactId>
-    <version>3-SNAPSHOT</version>
+    <version>3</version>
   </parent>
-
   <groupId>com.kamomileware.maven.plugin.opencms</groupId>
   <artifactId>opencms-module-maven-plugin</artifactId>
   <version>0.1.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
-
   <name>opencms-module-maven-plugin - OpenCms Module Maven Plugin</name>
   <description>Builds a OpenCms module file from a "opencms-module" project, generating a full-blown manifest from the
     project files and descriptors
   </description>
-
+  <url>https://github.com/kamomileware/opencms-module-maven-plugin</url>
   <scm>
     <connection>scm:git:git@github.com:kamomileware/opencms-module-maven-plugin.git</connection>
-    <developerConnection>scm:git:git@github.com:kamomileware/opencms-module-maven-plugin.git</developerConnection>
-    <url>scm:git:git@github.com:kamomileware/opencms-module-maven-plugin.git</url>
-    <tag>opencms-module-maven-plugin-0.1.0</tag>
+    <developerConnection>scm:git:git@kw.github.com:kamomileware/opencms-module-maven-plugin.git</developerConnection>
+    <url>https://github.com:kamomileware/opencms-module-maven-plugin.git</url>
+    <tag>HEAD</tag>
   </scm>
-
   <distributionManagement>
     <site>
       <id>kamomileware.git.server</id>
-      <url>gitsite:git@github.com/kamomileware/${project.artifactId}.git</url>
+      <url>gitsite:git@kw.github.com/kamomileware/${project.artifactId}.git</url>
     </site>
   </distributionManagement>
-
   <contributors>
     <contributor>
       <organization>VDOS Stochastics</organization>
