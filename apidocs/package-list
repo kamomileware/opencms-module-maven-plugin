@@ -1,0 +1,4 @@
+com.kamomileware.maven.plugin.opencms
+com.kamomileware.maven.plugin.opencms.native2ascii
+com.kamomileware.maven.plugin.opencms.packaging
+com.kamomileware.maven.plugin.opencms.util
