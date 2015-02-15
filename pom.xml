@@ -9,7 +9,7 @@
   <artifactId>opencms-module-maven-plugin</artifactId>
   <version>1.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
-  <name>opencms-module-maven-plugin - OpenCms Module Maven Plugin</name>
+  <name>OpenCms Module Maven Plugin</name>
   <description>Builds a OpenCms module file from a "opencms-module" project, generating a full-blown manifest from the
     project files and descriptors
   </description>
