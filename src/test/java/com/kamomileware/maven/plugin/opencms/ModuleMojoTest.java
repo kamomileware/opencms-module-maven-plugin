@@ -7,7 +7,7 @@ import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 import com.kamomileware.maven.plugin.opencms.ModuleMojo;
 
 public class ModuleMojoTest extends AbstractMojoTestCase {
-	
+
 	/** {@inheritDoc} */
 	protected void setUp() throws Exception {
 		// required
@@ -32,6 +32,6 @@ public class ModuleMojoTest extends AbstractMojoTestCase {
 
 		ModuleMojo myMojo = (ModuleMojo) lookupMojo("module", pom);
 		assertNotNull(myMojo);
-//		myMojo.execute();
+		myMojo.execute();
 	}
 }
