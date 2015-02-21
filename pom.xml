@@ -39,43 +39,9 @@
     </site>
   </distributionManagement>
   <properties>
-    <mavenVersion>2.2.1</mavenVersion>
-    <compileSource>1.5</compileSource>
-    <mavenPluginPluginVersion>3.2</mavenPluginPluginVersion>
-    <plexusCompilerVersion>2.2</plexusCompilerVersion>
-    <groovyVersion>1.8.0</groovyVersion>
-    <groovyEclipseCompilerVersion>2.7.0-01</groovyEclipseCompilerVersion>
-    <groovy-eclipse-batch>2.0.4-04</groovy-eclipse-batch>
-    <openJpaVersion>2.2.0</openJpaVersion>
+    <maven.version>2.2.1</maven.version>
   </properties>
   <dependencies>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-plugin-api</artifactId>
-      <version>${mavenVersion}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-artifact</artifactId>
-      <version>${mavenVersion}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-core</artifactId>
-      <version>${mavenVersion}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-settings</artifactId>
-      <version>${mavenVersion}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-model</artifactId>
-      <version>${mavenVersion}</version>
-      <scope>provided</scope>
-    </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-interpolation</artifactId>
@@ -126,25 +92,6 @@
       <artifactId>jug</artifactId>
       <version>2.0.0</version>
       <classifier>lgpl</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.plugin-tools</groupId>
-      <artifactId>maven-plugin-annotations</artifactId>
-      <version>${mavenPluginPluginVersion}</version>
-      <scope>provided</scope>
-    </dependency>
-    <!-- test -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.plugin-testing</groupId>
-      <artifactId>maven-plugin-testing-harness</artifactId>
-      <version>1.2</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>
