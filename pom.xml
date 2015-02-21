@@ -32,6 +32,14 @@
     <url>https://github.com:kamomileware/${project.artifactId}</url>
     <tag>develop</tag>
   </scm>
+  <issueManagement>
+    <system>GitHub Issue Management</system>
+    <url>https://github.com/kamomileware/${project.artifactId}/issues</url>
+  </issueManagement>
+  <ciManagement>
+    <system>Travis CI</system>
+    <url>https://travis-ci.org/kamomileware/${project.artifactId}</url>
+  </ciManagement>
   <distributionManagement>
     <site>
       <id>kamomileware.git.server</id>
