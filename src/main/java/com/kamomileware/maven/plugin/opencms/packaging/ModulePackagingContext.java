@@ -1,20 +1,19 @@
 package com.kamomileware.maven.plugin.opencms.packaging;
 
-import java.io.File;
-import java.util.List;
-
+import com.kamomileware.maven.plugin.opencms.ModuleResource;
+import com.kamomileware.maven.plugin.opencms.PlainEncodingConfig;
+import com.kamomileware.maven.plugin.opencms.util.ModuleStructure;
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.filtering.MavenFileFilter;
+import org.apache.maven.shared.utils.io.FileUtils;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.manager.ArchiverManager;
-import org.codehaus.plexus.util.FileUtils.FilterWrapper;
 
-import com.kamomileware.maven.plugin.opencms.ModuleResource;
-import com.kamomileware.maven.plugin.opencms.PlainEncodingConfig;
-import com.kamomileware.maven.plugin.opencms.util.ModuleStructure;
+import java.io.File;
+import java.util.List;
 
 /**
  * The packaging context.
@@ -23,166 +22,166 @@ import com.kamomileware.maven.plugin.opencms.util.ModuleStructure;
  * @version $Id: WarPackagingContext.java 743374 2009-02-11 16:28:01Z dennisl $
  */
 @SuppressWarnings("deprecation")
-public interface ModulePackagingContext
-{
-    /**
-     * Returns the maven project.
-     *
-     * @return the project
-     */
-    MavenProject getProject();
+public interface ModulePackagingContext {
+  /**
+   * Returns the maven project.
+   *
+   * @return the project
+   */
+  MavenProject getProject();
 
-    /**
-     * Returns the Module directory. Packaging tasks should use this
-     * directory to generate the Module.
-     *
-     * @return the Module directory
-     */
-    File getModuleDirectory();
+  /**
+   * Returns the Module directory. Packaging tasks should use this
+   * directory to generate the Module.
+   *
+   * @return the Module directory
+   */
+  File getModuleDirectory();
 
-    /**
-     * Returns the main Module source directory.
-     *
-     * @return the Module source directory
-     */
-    File getModuleSourceDirectory();
+  /**
+   * Returns the main Module source directory.
+   *
+   * @return the Module source directory
+   */
+  File getModuleSourceDirectory();
 
-    /**
-     * Returns the Module source includes.
-     *
-     * @return the Module source includes
-     */
-    String[] getModuleSourceIncludes();
+  /**
+   * Returns the Module source includes.
+   *
+   * @return the Module source includes
+   */
+  String[] getModuleSourceIncludes();
 
-    /**
-     * Returns the Module source excludes.
-     *
-     * @return the Module source excludes
-     */
-    String[] getModuleSourceExcludes();
+  /**
+   * Returns the Module source excludes.
+   *
+   * @return the Module source excludes
+   */
+  String[] getModuleSourceExcludes();
 
-    /**
-     * Returns the directory holding generated classes.
-     *
-     * @return the classes directory
-     */
-    File getClassesDirectory();
+  /**
+   * Returns the directory holding generated classes.
+   *
+   * @return the classes directory
+   */
+  File getClassesDirectory();
 
-    /**
-	 * Whether classes (module/classes or lib directory) should be attached to the project.
-	 * @return true if classes should be archived, false otherwise
-	 */
-    boolean isAttachClasses();
-    
-    /**
-     * Specify whether the classes resources should be archived in
-     * the <tt>/lib</tt> of the generated module.
-     *
-     * @return true if the classes should be archived, false otherwise
-     */
-    boolean archiveClasses();
+  /**
+   * Whether classes (module/classes or lib directory) should be attached to the project.
+   *
+   * @return true if classes should be archived, false otherwise
+   */
+  boolean isAttachClasses();
 
-    /**
-     * Returns the logger to use to output logging event.
-     *
-     * @return the logger
-     */
-    Log getLog();
+  /**
+   * Specify whether the classes resources should be archived in
+   * the <tt>/lib</tt> of the generated module.
+   *
+   * @return true if the classes should be archived, false otherwise
+   */
+  boolean archiveClasses();
 
-    /**
-     * Returns the archiver manager to use.
-     *
-     * @return the archiver manager
-     */
-    ArchiverManager getArchiverManager();
+  /**
+   * Returns the logger to use to output logging event.
+   *
+   * @return the logger
+   */
+  Log getLog();
 
-    /**
-     * The maven archive configuration to use.
-     *
-     * @return the maven archive configuration
-     */
-    MavenArchiveConfiguration getArchive();
+  /**
+   * Returns the archiver manager to use.
+   *
+   * @return the archiver manager
+   */
+  ArchiverManager getArchiverManager();
 
-    /**
-     * Returns the Jar archiver needed for archiving classes directory into
-     * jar file under WEB-INF/lib.
-     *
-     * @return the jar archiver to user
-     */
-    JarArchiver getJarArchiver();
+  /**
+   * The maven archive configuration to use.
+   *
+   * @return the maven archive configuration
+   */
+  MavenArchiveConfiguration getArchive();
 
-    /**
-     * Returns the output file name mapping to use, if any. Returns <tt>null</tt>
-     * if no file name mapping is set.
-     *
-     * @return the output file name mapping or <tt>null</tt>
-     */
-    String getOutputFileNameMapping();
+  /**
+   * Returns the Jar archiver needed for archiving classes directory into
+   * jar file under WEB-INF/lib.
+   *
+   * @return the jar archiver to user
+   */
+  JarArchiver getJarArchiver();
 
-    /**
-     * Returns the list of filter files to use.
-     *
-     * @return a list of filter files
-     */
-    List<?> getFilters();
+  /**
+   * Returns the output file name mapping to use, if any. Returns <tt>null</tt>
+   * if no file name mapping is set.
+   *
+   * @return the output file name mapping or <tt>null</tt>
+   */
+  String getOutputFileNameMapping();
 
-    /**
-     * Returns the {@link ModuleStructure}.
-     *
-     * @return the Module structure
-     */
-    ModuleStructure getModuleStructure();
+  /**
+   * Returns the list of filter files to use.
+   *
+   * @return a list of filter files
+   */
+  List<?> getFilters();
 
-    /**
-     * Returns the {@link MavenFileFilter} instance to use.
-     *
-     * @return the maven file filter to use
-     * @since 2.1-alpha-2
-     */
-    MavenFileFilter getMavenFileFilter();
+  /**
+   * Returns the {@link ModuleStructure}.
+   *
+   * @return the Module structure
+   */
+  ModuleStructure getModuleStructure();
 
-    /**
-     * @return {@link List} of {@link FilterWrapper}
-     * @since 2.1-alpha-2
-     */
-    List<FilterWrapper> getFilterWrappers();
+  /**
+   * Returns the {@link MavenFileFilter} instance to use.
+   *
+   * @return the maven file filter to use
+   * @since 2.1-alpha-2
+   */
+  MavenFileFilter getMavenFileFilter();
 
-    /**
-     * Specify if the given <tt>fileName</tt> belongs to the list of extensions
-     * that must not be filtered
-     *
-     * @param fileName the name of file
-     * @return <tt>true</tt> if it should not be filtered, <tt>false</tt> otherwise
-     * @since 2.1-alpha-2
-     */
-    boolean isNonFilteredExtension( String fileName );
+  /**
+   * @return {@link List} of {@link FileUtils.FilterWrapper}
+   * @since 2.1-alpha-2
+   */
+  List<FileUtils.FilterWrapper> getFilterWrappers();
 
-    boolean isFilteringDeploymentDescriptors();
+  /**
+   * Specify if the given <tt>fileName</tt> belongs to the list of extensions
+   * that must not be filtered
+   *
+   * @param fileName the name of file
+   * @return <tt>true</tt> if it should not be filtered, <tt>false</tt> otherwise
+   * @since 2.1-alpha-2
+   */
+  boolean isNonFilteredExtension(String fileName);
 
-    ArtifactFactory getArtifactFactory();
+  boolean isFilteringDeploymentDescriptors();
 
-    ModuleResource[] getModuleResources();
+  ArtifactFactory getArtifactFactory();
 
-    String getManifestEncoding();
+  ModuleResource[] getModuleResources();
 
-    File getDescriptorsDirectory();
+  String getManifestEncoding();
 
-    void setDescriptorsDirectory(File directory);
+  File getDescriptorsDirectory();
 
-    String getDescriptorsEncoding();
+  void setDescriptorsDirectory(File directory);
 
-	boolean isDescriptorsN2AApply();
+  String getDescriptorsEncoding();
 
-	PlainEncodingConfig getDescriptorsN2AConfig();
+  boolean isDescriptorsN2AApply();
 
-	File getWorkDirectory();
+  PlainEncodingConfig getDescriptorsN2AConfig();
 
-	ModuleResource getModuleSourceResource();
+  File getWorkDirectory();
 
-	ModuleResource getClassesResource();
+  ModuleResource getModuleSourceResource();
 
-	ModuleResource getLibResource();
+  ModuleResource getClassesResource();
 
-	String getModuleSourceTargetDirectory();
+  ModuleResource getLibResource();
+
+  String getModuleSourceTargetDirectory();
 
 }

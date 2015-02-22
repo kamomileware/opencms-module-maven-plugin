@@ -19,26 +19,25 @@ package com.kamomileware.maven.plugin.opencms.packaging;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-
+import com.kamomileware.maven.plugin.opencms.AbstractModuleMojo;
+import com.kamomileware.maven.plugin.opencms.util.MappingUtils;
+import com.kamomileware.maven.plugin.opencms.util.ModuleStructure;
+import com.kamomileware.maven.plugin.opencms.util.PathSet;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.shared.filtering.MavenFilteringException;
+import org.apache.maven.shared.utils.io.FileUtils;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.archiver.manager.NoSuchArchiverException;
 import org.codehaus.plexus.interpolation.InterpolationException;
 import org.codehaus.plexus.util.DirectoryScanner;
-import org.codehaus.plexus.util.FileUtils;
 
-import com.kamomileware.maven.plugin.opencms.AbstractModuleMojo;
-import com.kamomileware.maven.plugin.opencms.util.MappingUtils;
-import com.kamomileware.maven.plugin.opencms.util.ModuleStructure;
-import com.kamomileware.maven.plugin.opencms.util.PathSet;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * @author Stephane Nicoll

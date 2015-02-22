@@ -101,7 +101,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
    * pom.xml.
    */
   @Parameter
-  protected List<?> filters;
+  protected List<String> filters;
 
   /**
    * The path to the web.xml file to use.
@@ -449,7 +449,7 @@ public abstract class AbstractModuleMojo extends AbstractMojo {
     return filters;
   }
 
-  public void setFilters(List<?> filters) {
+  public void setFilters(List<String> filters) {
     this.filters = filters;
   }
 

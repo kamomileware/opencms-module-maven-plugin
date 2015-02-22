@@ -17,11 +17,11 @@ import org.apache.maven.project.MavenProjectHelper;
 import org.apache.maven.shared.filtering.MavenFileFilter;
 import org.apache.maven.shared.filtering.MavenFilteringException;
 import org.apache.maven.shared.filtering.MavenResourcesExecution;
+import org.apache.maven.shared.utils.io.FileUtils;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.jar.ManifestException;
 import org.codehaus.plexus.archiver.manager.ArchiverManager;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -297,7 +297,7 @@ public class ModuleMojo extends AbstractModuleMojo {
         final long startTime = System.currentTimeMillis();
         getLog().info("Assembling module [" + project.getArtifactId() + "] in [" + moduleDirectory + "]");
 
-        List<FileUtils.FilterWrapper> defaultFilterWrappers = null;
+        List<org.apache.maven.shared.utils.io.FileUtils.FilterWrapper> defaultFilterWrappers = null;
         try {
             MavenResourcesExecution mavenResourcesExecution = new MavenResourcesExecution();
             mavenResourcesExecution.setEscapeString(escapeString);
